@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>WYRE — Everyday. Elevated.</title>
+
+    <meta name="description"
+        content="WYRE — modern essentials designed for everyday wear. Explore our collection of caps, shirts, pants and trousers.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+
+<body>
+
+
+    <!-- ================= NAVBAR ================= -->
+
+    <header class="navbar">
+
+        <div class="nav-container">
+
+            <!-- Logo -->
+            <a href="#home" class="logo">
+                WYRE
+            </a>
+
+
+            <!-- Desktop Navigation -->
+
+            <nav class="nav-links">
+
+                <a href="#home" class="nav-link active">
+                    Home
+                </a>
+
+                <a href="#shop" class="nav-link">
+                    Shop
+                </a>
+
+                <a href="#collections" class="nav-link">
+                    Collections
+                </a>
+
+                <a href="#about" class="nav-link">
+                    About
+                </a>
+
+            </nav>
+
+
+            <!-- Right Navigation -->
+
+            <div class="nav-actions">
+
+                <!-- Search -->
+
+                <button class="nav-icon search-trigger" aria-label="Search">
+
+                    <svg width="21" height="21" viewBox="0 0 24 24" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+
+                        <circle cx="11" cy="11" r="7"
+                            stroke="currentColor"
+                            stroke-width="1.8" />
+
+                        <path d="M16.5 16.5L21 21"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round" />
+
+                    </svg>
+
+                </button>
+
+
+                <!-- Cart -->
+
+                <button class="cart-button" id="cartOpen" aria-label="Open shopping cart">
+
+                    <svg width="21" height="21" viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+
+                        <path d="M3 4H5L7.2 15.2C7.4 16.2 8.3 17 9.3 17H17.5C18.5 17 19.4 16.3 19.7 15.3L21 9H6"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linecap="round"
+                            stroke-linejoin="round" />
+
+                        <circle cx="10" cy="20" r="1.4"
+                            fill="currentColor" />
+
+                        <circle cx="18" cy="20" r="1.4"
+                            fill="currentColor" />
+
+                    </svg>
+
+                    <span id="cartCount">
+                        0
+                    </span>
+
+                </button>
+
+
+                <!-- Mobile Menu -->
+
+                <button class="mobile-menu-btn" id="menuToggle" aria-label="Open menu">
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ================= SEARCH OVERLAY ================= -->
+
+    <div class="search-overlay" id="searchOverlay">
+
+        <div class="search-box">
+
+            <button class="search-close" id="searchClose" aria-label="Close search">
+                ×
+            </button>
+
+            <p>
+                SEARCH WYRE
+            </p>
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search products..."
+                autocomplete="off">
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main>
+
+
+        <!-- ================= HERO ================= -->
+
+        <section class="hero" id="home">
+
+            <!-- Hero Image -->
+            <img
+                src="hero wy.jpg"
+                alt="WYRE Fashion Collection"
+                class="hero-image">
+
+            <div class="hero-content reveal">
+
+                <span class="hero-small">
+                    WYRE / NEW COLLECTION
+                </span>
+
+                <h1>
+                    Everyday.
+                    <br>
+                    <em>Elevated.</em>
+                </h1>
+
+                <p>
+                    Modern essentials designed for everyday confidence.
+                    Clean silhouettes. Comfortable fits. Timeless style.
+                </p>
+
+                <a href="#shop" class="primary-btn">
+                    Shop Collection
+                    <span>→</span>
+                </a>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= COLLECTIONS ================= -->
+
+        <section class="collections-section" id="collections">
+
+            <div class="section-heading reveal">
+
+                <p>
+                    EXPLORE WYRE
+                </p>
+
+                <h2>
+                    Shop by category
+                </h2>
+
+            </div>
+
+
+            <div class="category-grid">
+
+
+                <!-- ================= CAPS ================= -->
+
+                <a href="#shop"
+                    class="category-card reveal"
+                    data-category-link="caps">
+
+                    <div class="category-image">
+
+                        <img
+                            src="cap-1.jpg"
+                            alt="WYRE Caps">
+
+                    </div>
+
+                    <div class="category-content">
+
+                        <span>
+                            03 PRODUCTS
+                        </span>
+
+                        <h3>
+                            Caps
+                        </h3>
+
+                        <div>
+                            Explore →
+                        </div>
+
+                    </div>
+
+                </a>
+
+
+
+                <!-- ================= SHIRTS ================= -->
+
+                <a href="#shop"
+                    class="category-card reveal"
+                    data-category-link="shirts">
+
+                    <div class="category-image">
+
+                        <img
+                            src="shirt-1.jpg"
+                            alt="WYRE Shirts">
+
+                    </div>
+
+                    <div class="category-content">
+
+                        <span>
+                            03 PRODUCTS
+                        </span>
+
+                        <h3>
+                            Shirts
+                        </h3>
+
+                        <div>
+                            Explore →
+                        </div>
+
+                    </div>
+
+                </a>
+
+
+
+                <!-- ================= PANTS ================= -->
+
+                <a href="#shop"
+                    class="category-card reveal"
+                    data-category-link="pants">
+
+                    <div class="category-image">
+
+                        <img
+                            src="pants-1.jpg"
+                            alt="WYRE Pants">
+
+                    </div>
+
+                    <div class="category-content">
+
+                        <span>
+                            03 PRODUCTS
+                        </span>
+
+                        <h3>
+                            Pants
+                        </h3>
+
+                        <div>
+                            Explore →
+                        </div>
+
+                    </div>
+
+                </a>
+
+
+
+                <!-- ================= TROUSERS ================= -->
+
+                <a href="#shop"
+                    class="category-card reveal"
+                    data-category-link="trousers">
+
+                    <div class="category-image">
+
+                        <img
+                            src="trouser-1.jpg"
+                            alt="WYRE Trousers">
+
+                    </div>
+
+                    <div class="category-content">
+
+                        <span>
+                            03 PRODUCTS
+                        </span>
+
+                        <h3>
+                            Trousers
+                        </h3>
+
+                        <div>
+                            Explore →
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= PRODUCTS ================= -->
+
+        <section class="products-section" id="shop">
+
+            <div class="section-heading reveal">
+
+                <p>
+                    SHOP WYRE
+                </p>
+
+                <h2>
+                    Latest collection
+                </h2>
+
+            </div>
+
+
+            <!-- Filters -->
+
+            <div class="category-filter reveal">
+
+                <button
+                    class="filter-btn active"
+                    data-filter="all">
+
+                    All
+
+                </button>
+
+                <button
+                    class="filter-btn"
+                    data-filter="caps">
+
+                    Caps
+
+                </button>
+
+                <button
+                    class="filter-btn"
+                    data-filter="shirts">
+
+                    Shirts
+
+                </button>
+
+                <button
+                    class="filter-btn"
+                    data-filter="pants">
+
+                    Pants
+
+                </button>
+
+                <button
+                    class="filter-btn"
+                    data-filter="trousers">
+
+                    Trousers
+
+                </button>
+
+            </div>
+
+
+
+            <!-- Product Grid -->
+
+            <div class="product-grid">
+
+
+                <!-- ================= CAPS ================= -->
+
+
+                <!-- Cap 1 -->
+
+                <article
+                    class="product-card reveal"
+                    data-category="caps">
+
+                    <div class="product-image">
+
+                        <img
+                            src="cap-1.jpg"
+                            alt="WYRE Classic Cap">
+
+                        <span class="product-tag">
+                            NEW
+                        </span>
+
+                        <button
+                            class="wishlist-btn"
+                            aria-label="Add WYRE Classic Cap to wishlist">
+
+                            ♡
+
+                        </button>
+
+                        <button
+                            class="quick-add"
+                            data-name="WYRE Classic Cap"
+                            data-price="1999"
+                            data-image="cap-1.jpg">
+
+                            Quick Add
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span>
+                            CAPS
+                        </span>
+
+                        <h3>
+                            WYRE Classic Cap
+                        </h3>
+
+                        <p>
+                            Minimal everyday cap with a clean streetwear finish.
+                        </p>
+
+                        <strong>
+                            PKR 1,999
+                        </strong>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- Cap 2 -->
+
+                <article
+                    class="product-card reveal"
+                    data-category="caps">
+
+                    <div class="product-image">
+
+                        <img
+                            src="cap-2.jpg"
+                            alt="WYRE Spider Cap">
+
+                        <span class="product-tag">
+                            BEST SELLER
+                        </span>
+
+                        <button
+                            class="wishlist-btn"
+                            aria-label="Add WYRE Spider Cap to wishlist">
+
+                            ♡
+
+                        </button>
+
+                        <button
+                            class="quick-add"
+                            data-name="WYRE Spider Cap"
+                            data-price="1999"
+                            data-image="cap-2.jpg">
+
+                            Quick Add
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span>
+                            CAPS
+                        </span>
+
+                        <h3>
+                            WYRE Spider Cap
+                        </h3>
+
+                        <p>
+                            Spider-inspired cap designed to add a striking edge to your everyday streetwear look.
+                            
+                        </p>
+
+                        <strong>
+                            PKR 1,999
+                        </strong>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- Cap 3 -->
+
+                <article
+                    class="product-card reveal"
+                    data-category="caps">
+
+                    <div class="product-image">
+
+                        <img
+                            src="cap-3.jpg"
+                            alt="WYRE Urban Cap">
+
+                        <span class="product-tag">
+                            LIMITED
+                        </span>
+
+                        <button
+                            class="wishlist-btn"
+                            aria-label="Add WYRE Urban Cap to wishlist">
+
+                            ♡
+
+                        </button>
+
+                        <button
+                            class="quick-add"
+                            data-name="WYRE Urban Cap"
+                            data-price="1999"
+                            data-image="cap-3.jpg">
+
+                            Quick Add
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span>
+                            CAPS
+                        </span>
+
+                        <h3>
+                            WYRE Urban Cap
+                        </h3>
+
+                        <p>
+                           Signature WYRE design made for effortless daily wear.
+                        </p>
+
+                        <strong>
+                            PKR 1,999
+                        </strong>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- ================= SHIRTS ================= -->
+
+
+                <!-- Shirt 1 -->
+
+                <article
+                    class="product-card reveal"
+                    data-category="shirts">
+
+                    <div class="product-image">
+
+                        <img
+                            src="shirt-1.jpg"
+                            alt="WYRE Essential Shirt">
+
+                        <span class="product-tag">
+                            NEW
+                        </span>
+
+                        <button
+                            class="wishlist-btn"
+                            aria-label="Add WYRE Essential Shirt to wishlist">
+
+                            ♡
+
+                        </button>
+
+                        <button
+                            class="quick-add"
+                            data-name="WYRE Essential Shirt"
+                            data-price="1999"
+                            data-image="shirt-1.jpg">
+
+                            Quick Add
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span>
+                            SHIRTS
+                        </span>
+
+                        <h3>
+                            WYRE Essential Shirt
+                        </h3>
+
+                        <p>
+                            Relaxed everyday shirt with a clean premium aesthetic.
+                        </p>
+
+                        <strong>
+                            PKR 1,999
+                        </strong>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- Shirt 2 -->
+
+                <article
+                    class="product-card reveal"
+                    data-category="shirts">
+
+                    <div class="product-image">
+
+                        <img
+                            src="shirt-2.jpg"
+                            alt="WYRE Oversized Shirt">
+
+                        <span class="product-tag">
+                            BEST SELLER
+                        </span>
+
+                        <button
+                            class="wishlist-btn"
+                            aria-label="Add WYRE Oversized Shirt to wishlist">
+
+                            ♡
+
+                        </button>
+
+                        <button
+                            class="quick-add"
+                            data-name="WYRE Oversized Shirt"
+                            data-price="1499"
+                            data-image="shirt-2.jpg">
+
+                            Quick Add
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span>
+                            SHIRTS
+                        </span>
+
+                        <h3>
+                            WYRE Oversized Shirt
+                        </h3>
+
+                        <p>
+                            Loose oversized fit built for modern streetwear styling.
+                        </p>
+
+                        <strong>
+                            PKR 1,499
+                        </strong>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- Shirt 3 -->
+
+                <article
+                    class="product-card reveal"
+                    data-category="shirts">
+
+                    <div class="product-image">
+
+                        <img
+                            src="shirt-3.jpg"
+                            alt="WYRE Heavyweight Shirt">
+
+                        <span class="product-tag">
+                            NEW
+                        </span>
+
+                        <button
+                            class="wishlist-btn"
+                            aria-label="Add WYRE Heavyweight Shirt to wishlist">
+
+                            ♡
+
+                        </button>
+
+                        <button
+                            class="quick-add"
+                            data-name="WYRE Heavyweight Shirt"
+                            data-price="1499"
+                            data-image="shirt-3.jpg">
+
+                            Quick Add
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span>
+                            SHIRTS
+                        </span>
+
+                        <h3>
+                            WYRE Heavyweight Shirt
+                        </h3>
+
+                        <p>
+                            Premium heavyweight construction with a refined fit.
+                        </p>
+
+                        <strong>
+                            PKR 1,499
+                        </strong>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- ================= PANTS ================= -->
+
+
+                <!-- Pants 1 -->
+
+                <article
+                    class="product-card reveal"
+                    data-category="pants">
+
+                    <div class="product-image">
+
+                        <img
+                            src="pants-1.jpg"
+                            alt="WYRE Relaxed Pants">
+
+                        <span class="product-tag">
+                            NEW
+                        </span>
+
+                        <button
+                            class="wishlist-btn"
+                            aria-label="Add WYRE Relaxed Pants to wishlist">
+
+                            ♡
+
+                        </button>
+
+                        <button
+                            class="quick-add"
+                            data-name="WYRE Relaxed Pants"
+                            data-price="1999"
+                            data-image="pants-1.jpg">
+
+                            Quick Add
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span>
+                            PANTS
+                        </span>
+
+                        <h3>
+                            WYRE Relaxed Pants
+                        </h3>
+
+                        <p>
+                            Relaxed-fit pants combining comfort with a clean silhouette.
+                        </p>
+
+                        <strong>
+                            PKR 1,999
+                        </strong>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- Pants 2 -->
+
+                <article
+                    class="product-card reveal"
+                    data-category="pants">
+
+                    <div class="product-image">
+
+                        <img
+                            src="pants-2.jpg"
+                            alt="WYRE Cargo Pants">
+
+                        <span class="product-tag">
+                            BEST SELLER
+                        </span>
+
+                        <button
+                            class="wishlist-btn"
+                            aria-label="Add WYRE Cargo Pants to wishlist">
+
+                            ♡
+
+                        </button>
+
+                        <button
+                            class="quick-add"
+                            data-name="WYRE Cargo Pants"
+                            data-price="1499"
+                            data-image="pants-2.jpg">
+
+                            Quick Add
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span>
+                            PANTS
+                        </span>
+
+                        <h3>
+                            WYRE Cargo Pants
+                        </h3>
+
+                        <p>
+                            Utility-inspired cargo pants with a contemporary street fit.
+                        </p>
+
+                        <strong>
+                            PKR 1,499
+                        </strong>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- Pants 3 -->
+
+                <article
+                    class="product-card reveal"
+                    data-category="pants">
+
+                    <div class="product-image">
+
+                        <img
+                            src="pants-3.jpg"
+                            alt="WYRE Wide Pants">
+
+                        <span class="product-tag">
+                            LIMITED
+                        </span>
+
+                        <button
+                            class="wishlist-btn"
+                            aria-label="Add WYRE Wide Pants to wishlist">
+
+                            ♡
+
+                        </button>
+
+                        <button
+                            class="quick-add"
+                            data-name="WYRE Wide Pants"
+                            data-price="1999"
+                            data-image="pants-3.jpg">
+
+                            Quick Add
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span>
+                            PANTS
+                        </span>
+
+                        <h3>
+                            WYRE Wide Pants
+                        </h3>
+
+                        <p>
+                            Modern wide-leg pants designed for an effortless look.
+                        </p>
+
+                        <strong>
+                            PKR 1,999
+                        </strong>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- ================= TROUSERS ================= -->
+
+
+                <!-- Trouser 1 -->
+
+                <article
+                    class="product-card reveal"
+                    data-category="trousers">
+
+                    <div class="product-image">
+
+                        <img
+                            src="trouser-1.jpg"
+                            alt="WYRE Classic Trousers">
+
+                        <span class="product-tag">
+                            NEW
+                        </span>
+
+                        <button
+                            class="wishlist-btn"
+                            aria-label="Add WYRE Classic Trousers to wishlist">
+
+                            ♡
+
+                        </button>
+
+                        <button
+                            class="quick-add"
+                            data-name="WYRE Classic Trousers"
+                            data-price="1799"
+                            data-image="trouser-1.jpg">
+
+                            Quick Add
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span>
+                            TROUSERS
+                        </span>
+
+                        <h3>
+                            WYRE Classic Trousers
+                        </h3>
+
+                        <p>
+                            Sharp classic trousers with a modern everyday fit.
+                        </p>
+
+                        <strong>
+                            PKR 1,799
+                        </strong>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- Trouser 2 -->
+
+                <article
+                    class="product-card reveal"
+                    data-category="trousers">
+
+                    <div class="product-image">
+
+                        <img
+                            src="trouser-2.jpg"
+                            alt="WYRE Tailored Trousers">
+
+                        <span class="product-tag">
+                            BEST SELLER
+                        </span>
+
+                        <button
+                            class="wishlist-btn"
+                            aria-label="Add WYRE Tailored Trousers to wishlist">
+
+                            ♡
+
+                        </button>
+
+                        <button
+                            class="quick-add"
+                            data-name="WYRE Tailored Trousers"
+                            data-price="1999"
+                            data-image="trouser-2.jpg">
+
+                            Quick Add
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span>
+                            TROUSERS
+                        </span>
+
+                        <h3>
+                            WYRE Tailored Trousers
+                        </h3>
+
+                        <p>
+                            Clean tailored trousers designed for a refined casual look.
+                        </p>
+
+                        <strong>
+                            PKR 1,999
+                        </strong>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- Trouser 3 -->
+
+                <article
+                    class="product-card reveal"
+                    data-category="trousers">
+
+                    <div class="product-image">
+
+                        <img
+                            src="trouser-3.jpg"
+                            alt="WYRE Relaxed Trousers">
+
+                        <span class="product-tag">
+                            NEW
+                        </span>
+
+                        <button
+                            class="wishlist-btn"
+                            aria-label="Add WYRE Relaxed Trousers to wishlist">
+
+                            ♡
+
+                        </button>
+
+                        <button
+                            class="quick-add"
+                            data-name="WYRE Relaxed Trousers"
+                            data-price="1499"
+                            data-image="trouser-3.jpg">
+
+                            Quick Add
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span>
+                            TROUSERS
+                        </span>
+
+                        <h3>
+                            WYRE Relaxed Trousers
+                        </h3>
+
+                        <p>
+                            Relaxed trousers offering comfort with a polished finish.
+                        </p>
+
+                        <strong>
+                            PKR 1,499
+                        </strong>
+
+                    </div>
+
+                </article>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= BRAND STORY ================= -->
+
+        <section class="brand-story" id="about">
+
+            <div class="brand-story-inner reveal">
+
+                <span>
+                    THE WYRE PHILOSOPHY
+                </span>
+
+                <h2>
+                    Less noise.
+                    <br>
+                    <em>More style.</em>
+                </h2>
+
+                <p>
+                    WYRE is built around a simple idea:
+                    everyday clothing should feel effortless.
+                    We focus on clean designs, comfortable fits
+                    and pieces that work beyond the season.
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= NEWSLETTER ================= -->
+
+        <section class="newsletter-section">
+
+            <div class="newsletter-content reveal">
+
+                <span>
+                    STAY IN THE LOOP
+                </span>
+
+                <h2>
+                    Get the latest from WYRE.
+                </h2>
+
+                <p>
+                    New drops, exclusive pieces and updates —
+                    straight to your inbox.
+                </p>
+
+
+                <form id="newsletterForm">
+
+                    <input
+                        type="email"
+                        id="newsletterEmail"
+                        placeholder="Your email address"
+                        required>
+
+                    <button type="submit">
+                        Subscribe →
+                    </button>
+
+                </form>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- ================= CART DRAWER ================= -->
+
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+
+    <aside class="cart-drawer" id="cartDrawer">
+
+        <div class="cart-header">
+
+            <div>
+
+                <span>
+                    YOUR BAG
+                </span>
+
+                <h3>
+                    Shopping Cart
+                </h3>
+
+            </div>
+
+            <button
+                id="cartClose"
+                class="cart-close"
+                aria-label="Close cart">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <div
+            class="cart-items"
+            id="cartItems">
+
+            <!-- Cart items inserted by JavaScript -->
+
+        </div>
+
+
+        <div class="cart-footer">
+
+            <div class="cart-total">
+
+                <span>
+                    Subtotal
+                </span>
+
+                <strong id="cartTotal">
+                    PKR 0
+                </strong>
+
+            </div>
+
+            <button
+                class="checkout-btn"
+                id="checkoutBtn">
+
+                Checkout
+
+                <span>
+                    →
+                </span>
+
+            </button>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer class="footer">
+
+        <div class="footer-main">
+
+
+            <div class="footer-brand">
+
+                <a href="#home" class="footer-logo">
+                    WYRE
+                </a>
+
+                <p>
+                    Everyday essentials.
+                    Elevated.
+                </p>
+
+            </div>
+
+
+            <div class="footer-links">
+
+                <div>
+
+                    <span>
+                        SHOP
+                    </span>
+
+                    <a href="#shop">
+                        All Products
+                    </a>
+
+                    <a href="#shop">
+                        Caps
+                    </a>
+
+                    <a href="#shop">
+                        Shirts
+                    </a>
+
+                    <a href="#shop">
+                        Pants
+                    </a>
+
+                    <a href="#shop">
+                        Trousers
+                    </a>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        COMPANY
+                    </span>
+
+                    <a href="#about">
+                        About WYRE
+                    </a>
+
+                    <a href="#">
+                        Contact
+                    </a>
+
+                    <a href="#">
+                        Shipping
+                    </a>
+
+                    <a href="#">
+                        Returns
+                    </a>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        FOLLOW
+                    </span>
+
+                    <a href="#">
+                        Instagram
+                    </a>
+
+                    <a href="#">
+                        Facebook
+                    </a>
+
+                    <a href="#">
+                        TikTok
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <p>
+                © 2026 WYRE. All rights reserved.
+            </p>
+
+            <p>
+                Designed & developed with care.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
