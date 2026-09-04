@@ -609,48 +609,74 @@ function updateCart() {
             "wyre-cart-item";
 
 
+        const thumb =
+            item.image
+                ? `<div class="wyre-cart-thumb">
+                       <img src="${escapeHTML(item.image)}"
+                            alt="${escapeHTML(item.name)}"
+                            loading="lazy">
+                   </div>`
+                : "";
+
+
         cartItem.innerHTML = `
+            ${thumb}
+
             <div class="wyre-cart-info">
 
-                <strong>
-                    ${escapeHTML(item.name)}
-                </strong>
+                <div class="wyre-cart-top">
 
-                <span>
-                    PKR ${price.toLocaleString()}
-                </span>
-
-                <div class="wyre-quantity">
+                    <strong>
+                        ${escapeHTML(item.name)}
+                    </strong>
 
                     <button
                         type="button"
-                        class="quantity-minus"
-                        data-index="${index}">
-                        −
-                    </button>
-
-                    <span>
-                        ${quantity}
-                    </span>
-
-                    <button
-                        type="button"
-                        class="quantity-plus"
-                        data-index="${index}">
-                        +
+                        class="wyre-remove"
+                        data-index="${index}"
+                        aria-label="Remove ${escapeHTML(item.name)}">
+                        ×
                     </button>
 
                 </div>
 
-            </div>
+                <span class="wyre-cart-price">
+                    PKR ${price.toLocaleString()}
+                </span>
 
-            <button
-                type="button"
-                class="wyre-remove"
-                data-index="${index}"
-                aria-label="Remove product">
-                ×
-            </button>
+                <div class="wyre-cart-bottom">
+
+                    <div class="wyre-quantity">
+
+                        <button
+                            type="button"
+                            class="quantity-minus"
+                            data-index="${index}"
+                            aria-label="Decrease quantity">
+                            −
+                        </button>
+
+                        <span>
+                            ${quantity}
+                        </span>
+
+                        <button
+                            type="button"
+                            class="quantity-plus"
+                            data-index="${index}"
+                            aria-label="Increase quantity">
+                            +
+                        </button>
+
+                    </div>
+
+                    <span class="wyre-line-total">
+                        PKR ${(price * quantity).toLocaleString()}
+                    </span>
+
+                </div>
+
+            </div>
         `;
 
 
@@ -1616,3 +1642,368 @@ function escapeHTML(text) {
 ========================================================= */
 
 updateCart();
+
+/* =========================================================
+   PRODUCT DETAIL MODAL
+========================================================= */
+
+let pdImages = [];
+let pdIndex = 0;
+let pdQty = 1;
+let pdCurrent = null;
+
+
+function buildProductDetail() {
+
+    if (document.getElementById("productDetail")) {
+        return;
+    }
+
+    const modal = document.createElement("div");
+    modal.id = "productDetail";
+
+    modal.innerHTML = `
+        <div class="pd-backdrop"></div>
+
+        <div class="pd-box" role="dialog" aria-modal="true">
+
+            <button class="pd-close" id="pdClose" aria-label="Close">&times;</button>
+
+            <div class="pd-gallery">
+                <div class="pd-track" id="pdTrack"></div>
+                <button class="pd-arrow prev" id="pdPrev" aria-label="Previous image">&#8249;</button>
+                <button class="pd-arrow next" id="pdNext" aria-label="Next image">&#8250;</button>
+                <div class="pd-dots" id="pdDots"></div>
+            </div>
+
+            <div class="pd-info">
+
+                <p class="pd-category" id="pdCategory"></p>
+                <h2 class="pd-name" id="pdName"></h2>
+                <p class="pd-price" id="pdPrice"></p>
+                <p class="pd-desc" id="pdDesc"></p>
+
+                <div class="pd-meta">
+                    Cash on delivery available<br>
+                    Delivery in 3&ndash;5 working days<br>
+                    Easy exchange within 7 days
+                </div>
+
+                <div class="pd-qty-row">
+                    <span class="pd-qty-label">Quantity</span>
+                    <div class="pd-qty">
+                        <button type="button" id="pdMinus" aria-label="Decrease">&minus;</button>
+                        <span id="pdQtyValue">1</span>
+                        <button type="button" id="pdPlus" aria-label="Increase">+</button>
+                    </div>
+                </div>
+
+                <div class="pd-actions">
+                    <button type="button" class="pd-buy" id="pdBuy">Order Now</button>
+                    <button type="button" class="pd-add" id="pdAdd">Add to Bag</button>
+                </div>
+
+                <p class="pd-note">You pay when the parcel arrives.</p>
+
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+
+    document.getElementById("pdClose")
+        .addEventListener("click", closeProductDetail);
+
+    modal.querySelector(".pd-backdrop")
+        .addEventListener("click", closeProductDetail);
+
+    document.getElementById("pdPrev")
+        .addEventListener("click", function () {
+            goToSlide(pdIndex - 1);
+        });
+
+    document.getElementById("pdNext")
+        .addEventListener("click", function () {
+            goToSlide(pdIndex + 1);
+        });
+
+    document.getElementById("pdMinus")
+        .addEventListener("click", function () {
+            setQty(pdQty - 1);
+        });
+
+    document.getElementById("pdPlus")
+        .addEventListener("click", function () {
+            setQty(pdQty + 1);
+        });
+
+    document.getElementById("pdAdd")
+        .addEventListener("click", function () {
+            addDetailToCart();
+            closeProductDetail();
+            openCart();
+        });
+
+    document.getElementById("pdBuy")
+        .addEventListener("click", function () {
+            addDetailToCart();
+            closeProductDetail();
+
+            if (typeof openCheckout === "function") {
+                openCheckout();
+            } else {
+                openCart();
+            }
+        });
+
+
+    /* Swipe support for touch devices */
+
+    const gallery = modal.querySelector(".pd-gallery");
+    let startX = 0;
+    let moved = false;
+
+    gallery.addEventListener("touchstart", function (e) {
+        startX = e.changedTouches[0].clientX;
+        moved = false;
+    }, { passive: true });
+
+    gallery.addEventListener("touchmove", function () {
+        moved = true;
+    }, { passive: true });
+
+    gallery.addEventListener("touchend", function (e) {
+        if (!moved) return;
+        const diff = e.changedTouches[0].clientX - startX;
+        if (Math.abs(diff) < 45) return;
+        goToSlide(diff < 0 ? pdIndex + 1 : pdIndex - 1);
+    }, { passive: true });
+}
+
+
+function setQty(value) {
+
+    pdQty = Math.max(1, Math.min(10, value));
+
+    const box = document.getElementById("pdQtyValue");
+
+    if (box) {
+        box.textContent = pdQty;
+    }
+}
+
+
+function goToSlide(index) {
+
+    if (pdImages.length === 0) return;
+
+    if (index < 0) {
+        index = pdImages.length - 1;
+    }
+
+    if (index > pdImages.length - 1) {
+        index = 0;
+    }
+
+    pdIndex = index;
+
+    const track = document.getElementById("pdTrack");
+
+    if (track) {
+        track.style.transform =
+            "translateX(-" + (pdIndex * 100) + "%)";
+    }
+
+    document.querySelectorAll(".pd-dot")
+        .forEach(function (dot, i) {
+            dot.classList.toggle("active", i === pdIndex);
+        });
+}
+
+
+function renderGallery(images, name) {
+
+    const track = document.getElementById("pdTrack");
+    const dots = document.getElementById("pdDots");
+    const prev = document.getElementById("pdPrev");
+    const next = document.getElementById("pdNext");
+
+    track.innerHTML = "";
+    dots.innerHTML = "";
+
+    images.forEach(function (src, i) {
+
+        const slide = document.createElement("div");
+        slide.className = "pd-slide";
+
+        const img = document.createElement("img");
+        img.src = src;
+        img.alt = name + " image " + (i + 1);
+        img.loading = i === 0 ? "eager" : "lazy";
+
+        /* Agar file maujood na ho to slide hata do */
+        img.addEventListener("error", function () {
+            slide.remove();
+            const dot = dots.children[i];
+            if (dot) dot.remove();
+            pdImages = pdImages.filter(function (s) {
+                return s !== src;
+            });
+            refreshControls();
+            goToSlide(0);
+        });
+
+        slide.appendChild(img);
+        track.appendChild(slide);
+
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "pd-dot" + (i === 0 ? " active" : "");
+        dot.setAttribute("aria-label", "Image " + (i + 1));
+        dot.addEventListener("click", function () {
+            goToSlide(i);
+        });
+        dots.appendChild(dot);
+    });
+
+    refreshControls();
+
+    function refreshControls() {
+        const many = track.children.length > 1;
+        prev.style.display = many ? "" : "none";
+        next.style.display = many ? "" : "none";
+        dots.style.display = many ? "" : "none";
+    }
+}
+
+
+function openProductDetail(card) {
+
+    buildProductDetail();
+
+    const button = card.querySelector(".quick-add");
+    const nameEl = card.querySelector(".product-info h3");
+    const descEl = card.querySelector(".product-info p");
+    const catEl = card.querySelector(".product-info span");
+    const priceEl = card.querySelector(".product-info strong");
+    const mainImg = card.querySelector(".product-image img");
+
+    const name = nameEl ? nameEl.textContent.trim() : "WYRE Product";
+    const price = button ? Number(button.dataset.price) || 0 : 0;
+    const image = mainImg ? mainImg.getAttribute("src") : "";
+
+    pdCurrent = { name: name, price: price, image: image };
+
+
+    /* data-images ho to gallery, warna single image */
+
+    if (card.dataset.images) {
+        pdImages = card.dataset.images
+            .split(",")
+            .map(function (s) { return s.trim(); })
+            .filter(Boolean);
+    } else {
+        pdImages = image ? [image] : [];
+    }
+
+    pdIndex = 0;
+    setQty(1);
+
+    document.getElementById("pdCategory").textContent =
+        catEl ? catEl.textContent.trim() : "";
+
+    document.getElementById("pdName").textContent = name;
+
+    document.getElementById("pdPrice").textContent =
+        priceEl ? priceEl.textContent.trim() : "";
+
+    document.getElementById("pdDesc").textContent =
+        descEl ? descEl.textContent.trim() : "";
+
+    renderGallery(pdImages, name);
+    goToSlide(0);
+
+    const modal = document.getElementById("productDetail");
+    modal.classList.add("active");
+    document.body.style.overflow = "hidden";
+}
+
+
+function closeProductDetail() {
+
+    const modal = document.getElementById("productDetail");
+
+    if (modal) {
+        modal.classList.remove("active");
+    }
+
+    document.body.style.overflow = "";
+}
+
+
+function addDetailToCart() {
+
+    if (!pdCurrent || pdCurrent.price <= 0) {
+        return;
+    }
+
+    const existing = cart.find(function (item) {
+        return item.name === pdCurrent.name;
+    });
+
+    if (existing) {
+        existing.quantity =
+            Number(existing.quantity || 0) + pdQty;
+    } else {
+        cart.push({
+            name: pdCurrent.name,
+            price: pdCurrent.price,
+            image: pdCurrent.image,
+            quantity: pdQty
+        });
+    }
+
+    saveCart();
+    updateCart();
+}
+
+
+/* Card click opens the detail view */
+
+products.forEach(function (card) {
+
+    card.addEventListener("click", function (event) {
+
+        if (event.target.closest(".quick-add") ||
+            event.target.closest(".wishlist-btn")) {
+            return;
+        }
+
+        openProductDetail(card);
+    });
+});
+
+
+/* Keyboard: Esc closes, arrows change image */
+
+document.addEventListener("keydown", function (event) {
+
+    const modal = document.getElementById("productDetail");
+
+    if (!modal || !modal.classList.contains("active")) {
+        return;
+    }
+
+    if (event.key === "Escape") {
+        closeProductDetail();
+    }
+
+    if (event.key === "ArrowLeft") {
+        goToSlide(pdIndex - 1);
+    }
+
+    if (event.key === "ArrowRight") {
+        goToSlide(pdIndex + 1);
+    }
+});
