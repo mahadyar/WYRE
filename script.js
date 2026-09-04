@@ -184,37 +184,158 @@ categoryCards.forEach(function (category) {
    SEARCH PRODUCTS
 ========================================================= */
 
+function runProductSearch(searchValue) {
+
+    let found = 0;
+
+
+    products.forEach(function (product) {
+
+        const nameElement =
+            product.querySelector(".product-info h3");
+
+        const name =
+            nameElement
+                ? nameElement.textContent.toLowerCase()
+                : "";
+
+        const category =
+            product.dataset.category
+                ? product.dataset.category.toLowerCase()
+                : "";
+
+        const description =
+            product.querySelector(".product-info p");
+
+        const text =
+            description
+                ? description.textContent.toLowerCase()
+                : "";
+
+
+        const matches =
+            searchValue === "" ||
+            name.includes(searchValue) ||
+            category.includes(searchValue) ||
+            text.includes(searchValue);
+
+
+        product.style.display =
+            matches ? "" : "none";
+
+
+        /* Reveal animation ke bina card invisible reh jata hai */
+
+        if (matches) {
+
+            product.classList.add("show");
+
+            found += 1;
+
+        }
+
+    });
+
+
+    return found;
+
+}
+
+
 if (searchInput) {
+
+    /* Result counter inside the search box */
+
+    const searchStatus =
+        document.createElement("p");
+
+    searchStatus.id = "searchStatus";
+
+    searchStatus.style.cssText =
+        "margin-top:18px;font-size:11px;letter-spacing:1px;color:#777;";
+
+    if (searchInput.parentNode) {
+
+        searchInput.parentNode.appendChild(
+            searchStatus
+        );
+
+    }
+
 
     searchInput.addEventListener("input", function () {
 
         const searchValue =
             searchInput.value.toLowerCase().trim();
 
-        products.forEach(function (product) {
 
-            const nameElement =
-                product.querySelector(".product-info h3");
+        const found =
+            runProductSearch(searchValue);
 
-            const name =
-                nameElement
-                    ? nameElement.textContent.toLowerCase()
-                    : "";
 
-            const category =
-                product.dataset.category
-                    ? product.dataset.category.toLowerCase()
-                    : "";
+        if (searchValue === "") {
 
-            const matches =
-                searchValue === "" ||
-                name.includes(searchValue) ||
-                category.includes(searchValue);
+            searchStatus.textContent = "";
 
-            product.style.display =
-                matches ? "" : "none";
+        } else if (found === 0) {
 
-        });
+            searchStatus.textContent =
+                "No products match \u201C" +
+                searchInput.value.trim() +
+                "\u201D";
+
+        } else {
+
+            searchStatus.textContent =
+                found +
+                (found === 1
+                    ? " product found \u2014 press Enter to view"
+                    : " products found \u2014 press Enter to view");
+
+        }
+
+    });
+
+
+    /* Enter = close overlay and jump to the results */
+
+    searchInput.addEventListener("keydown", function (event) {
+
+        if (event.key !== "Enter") {
+            return;
+        }
+
+        event.preventDefault();
+
+
+        const searchValue =
+            searchInput.value.toLowerCase().trim();
+
+
+        if (runProductSearch(searchValue) === 0) {
+            return;
+        }
+
+
+        if (searchOverlay) {
+
+            searchOverlay.classList.remove("active");
+
+        }
+
+
+        const shopSection =
+            document.getElementById("shop");
+
+
+        if (shopSection) {
+
+            shopSection.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+        }
 
     });
 
