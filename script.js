@@ -1648,6 +1648,8 @@ updateCart();
 ========================================================= */
 
 let pdImages = [];
+let pdColor = "";
+let pdDefaultImages = [];
 let pdIndex = 0;
 let pdQty = 1;
 let pdCurrent = null;
@@ -1688,6 +1690,17 @@ function buildProductDetail() {
                     Delivery in 3&ndash;5 working days<br>
                     Easy exchange within 7 days
                 </div>
+
+                <div class="pd-colors-row" id="pdColorsRow" hidden>
+
+                    <span class="pd-qty-label">
+                        Colour: <b id="pdColorName"></b>
+                    </span>
+
+                    <div class="pd-colors" id="pdColors"></div>
+
+                </div>
+
 
                 <div class="pd-qty-row">
                     <span class="pd-qty-label">Quantity</span>
@@ -1871,6 +1884,15 @@ function renderGallery(images, name) {
                 }
             );
 
+            /* Sab slides gir gayin to asal tasveer wapis lao */
+            if (track.children.length === 0 &&
+                pdDefaultImages.length &&
+                pdImages.length === 0) {
+
+                showImages(pdDefaultImages);
+                return;
+            }
+
             refreshControls();
             goToSlide(0);
         });
@@ -1896,6 +1918,119 @@ function renderGallery(images, name) {
         next.style.display = many ? "" : "none";
         dots.style.display = many ? "" : "none";
     }
+}
+
+
+function showImages(list) {
+
+    pdImages = list.slice();
+
+    if (pdCurrent && pdImages[0]) {
+        pdCurrent.image = pdImages[0];
+    }
+
+    renderGallery(pdImages, pdCurrent ? pdCurrent.name : "");
+    goToSlide(0);
+}
+
+
+function applyColorImages(shots) {
+
+    /* Us colour ki koi image di hi nahi gayi */
+
+    if (shots.length === 0) {
+        showImages(pdDefaultImages);
+        return;
+    }
+
+
+    /* File maujood hai ya nahi, pehle check karo.
+       Na mile to asal tasveer par hi rahne do,
+       warna gallery khali ho jati hai. */
+
+    const test = new Image();
+
+    test.onload = function () {
+        showImages(shots);
+    };
+
+    test.onerror = function () {
+        showImages(pdDefaultImages);
+    };
+
+    test.src = shots[0];
+}
+
+
+function renderColors(raw) {
+
+    const row = document.getElementById("pdColorsRow");
+    const box = document.getElementById("pdColors");
+    const label = document.getElementById("pdColorName");
+
+    box.innerHTML = "";
+    pdColor = "";
+
+
+    const list = raw
+        .split(",")
+        .map(function (part) { return part.trim(); })
+        .filter(Boolean);
+
+
+    if (list.length === 0) {
+        row.hidden = true;
+        return;
+    }
+
+    row.hidden = false;
+
+
+    list.forEach(function (entry, i) {
+
+        const bits = entry.split("|");
+        const colorName = bits[0].trim();
+        const hex = (bits[1] || "#ccc").trim();
+
+        /* Teesra hissa: is colour ki apni images (; se alag) */
+        const shots =
+            (bits[2] || "")
+                .split(";")
+                .map(function (x) { return x.trim(); })
+                .filter(Boolean);
+
+
+        const swatch = document.createElement("button");
+        swatch.type = "button";
+        swatch.className = "pd-swatch" + (i === 0 ? " active" : "");
+        swatch.style.background = hex;
+        swatch.title = colorName;
+        swatch.setAttribute("aria-label", colorName);
+
+        swatch.addEventListener("click", function () {
+
+            box.querySelectorAll(".pd-swatch")
+                .forEach(function (other) {
+                    other.classList.remove("active");
+                });
+
+            swatch.classList.add("active");
+            pdColor = colorName;
+            label.textContent = colorName;
+
+            applyColorImages(shots);
+        });
+
+        box.appendChild(swatch);
+
+        if (i === 0) {
+            pdColor = colorName;
+            label.textContent = colorName;
+            if (shots.length) {
+                applyColorImages(shots);
+            }
+        }
+    });
 }
 
 
@@ -1928,6 +2063,7 @@ function openProductDetail(card) {
         pdImages = image ? [image] : [];
     }
 
+    pdDefaultImages = pdImages.slice();
     pdIndex = 0;
     setQty(1);
 
@@ -1944,6 +2080,8 @@ function openProductDetail(card) {
 
     renderGallery(pdImages, name);
     goToSlide(0);
+
+    renderColors(card.dataset.colors || "");
 
     const modal = document.getElementById("productDetail");
     modal.classList.add("active");
@@ -1969,8 +2107,15 @@ function addDetailToCart() {
         return;
     }
 
+    /* Har colour cart mein apni alag line banega */
+
+    const label =
+        pdColor
+            ? pdCurrent.name + " \u2014 " + pdColor
+            : pdCurrent.name;
+
     const existing = cart.find(function (item) {
-        return item.name === pdCurrent.name;
+        return item.name === label;
     });
 
     if (existing) {
@@ -1978,7 +2123,7 @@ function addDetailToCart() {
             Number(existing.quantity || 0) + pdQty;
     } else {
         cart.push({
-            name: pdCurrent.name,
+            name: label,
             price: pdCurrent.price,
             image: pdCurrent.image,
             quantity: pdQty
@@ -1993,6 +2138,24 @@ function addDetailToCart() {
 /* Card click opens the detail view */
 
 products.forEach(function (card) {
+
+    /* Colour wale product par Quick Add seedha cart mein na daale,
+       warna order mein colour hi nahi aayega */
+
+    if (card.dataset.colors) {
+
+        const quick = card.querySelector(".quick-add");
+
+        if (quick) {
+
+            quick.addEventListener("click", function (event) {
+                event.stopPropagation();
+                event.preventDefault();
+                openProductDetail(card);
+            }, true);
+        }
+    }
+
 
     card.addEventListener("click", function (event) {
 

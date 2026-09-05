@@ -2049,3 +2049,71 @@ section[id] {
     margin: 0 auto;
     object-position: center;
 }
+
+/* =========================
+   COLOUR SWATCHES
+========================= */
+
+.pd-colors-row {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+    margin-bottom: 22px;
+}
+
+.pd-colors-row[hidden] {
+    display: none;
+}
+
+.pd-colors-row b {
+    color: #111;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+.pd-colors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.pd-swatch {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.18);
+    padding: 0;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.18s ease;
+}
+
+.pd-swatch:hover {
+    transform: scale(1.08);
+}
+
+.pd-swatch.active::after {
+    content: "";
+    position: absolute;
+    inset: -5px;
+    border: 1px solid #111;
+    border-radius: 50%;
+}
+
+.pd-swatch:focus-visible {
+    outline: 2px solid #111;
+    outline-offset: 4px;
+}
+
+@media (max-width: 700px) {
+
+    .pd-swatch {
+        width: 38px;
+        height: 38px;
+    }
+
+    .pd-colors-row {
+        margin-bottom: 18px;
+    }
+}
