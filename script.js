@@ -1842,14 +1842,35 @@ function renderGallery(images, name) {
         img.alt = name + " image " + (i + 1);
         img.loading = i === 0 ? "eager" : "lazy";
 
-        /* Agar file maujood na ho to slide hata do */
+        /* Agar file maujood na ho to slide aur uska dot hata do */
         img.addEventListener("error", function () {
+
+            const position =
+                Array.prototype.indexOf.call(
+                    track.children,
+                    slide
+                );
+
+            if (position > -1 && dots.children[position]) {
+                dots.children[position].remove();
+            }
+
             slide.remove();
-            const dot = dots.children[i];
-            if (dot) dot.remove();
-            pdImages = pdImages.filter(function (s) {
-                return s !== src;
+
+            pdImages = pdImages.filter(function (item) {
+                return item !== src;
             });
+
+            /* Baqi dots ko dobara sahi index dena */
+            Array.prototype.forEach.call(
+                dots.children,
+                function (dot, newIndex) {
+                    dot.onclick = function () {
+                        goToSlide(newIndex);
+                    };
+                }
+            );
+
             refreshControls();
             goToSlide(0);
         });
@@ -2007,3 +2028,27 @@ document.addEventListener("keydown", function (event) {
         goToSlide(pdIndex + 1);
     }
 });
+
+/* =========================================================
+   REAL VIEWPORT HEIGHT
+   Mobile browsers ka address bar 100vh ko bara kar deta hai,
+   is liye asal height khud naap kar CSS ko dete hain.
+========================================================= */
+
+function setAppHeight() {
+
+    document.documentElement.style.setProperty(
+        "--app-height",
+        window.innerHeight + "px"
+    );
+}
+
+setAppHeight();
+
+window.addEventListener("resize", setAppHeight);
+window.addEventListener("orientationchange", setAppHeight);
+
+/* Address bar chhupne/aane par bhi update */
+if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", setAppHeight);
+}
