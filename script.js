@@ -10,6 +10,9 @@
 
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/xvkoqrna";
 
+/* Newsletter ke liye alag form banayen to sirf ye line badlein */
+const NEWSLETTER_ENDPOINT = "https://formspree.io/f/xbgjzkpw";
+
 
 /* =========================================================
    NAVBAR
@@ -665,7 +668,7 @@ function addSavedToCart(name) {
 
     if (target && target.dataset.colors) {
         closeWishlist();
-        openProductDetail(target);
+        goToProductPage(target);
         return;
     }
 
@@ -1837,10 +1840,15 @@ async function submitOrder(event) {
 
 if (checkoutBtn) {
 
-    checkoutBtn.addEventListener(
-        "click",
-        openCheckout
-    );
+    checkoutBtn.addEventListener("click", function () {
+
+        if (cart.length === 0) {
+            return;
+        }
+
+        /* Ab checkout modal ki jagah apna alag page */
+        window.location.href = "checkout.html";
+    });
 
 }
 
@@ -1865,36 +1873,73 @@ if (newsletterForm) {
 
 
             const button =
-                newsletterForm.querySelector(
-                    "button"
-                );
+                newsletterForm.querySelector("button");
+
+            const input =
+                document.getElementById("newsletterEmail");
+
+            if (!input) return;
 
 
-            if (button) {
+            const email = input.value.trim();
 
-                button.textContent =
-                    "Subscribed ✓";
-
-                button.disabled = true;
-
+            /* Sada sa check: bina @ aur dot ke bhejne ka faida nahi */
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                input.focus();
+                return;
             }
 
 
-            newsletterForm.reset();
+            const original =
+                button ? button.textContent : "";
+
+            if (button) {
+                button.textContent = "Sending...";
+                button.disabled = true;
+            }
 
 
-            setTimeout(function () {
+            fetch(NEWSLETTER_ENDPOINT, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({
+                    type: "Newsletter signup",
+                    email: email,
+                    signed_up_at: new Date().toLocaleString()
+                })
+            })
+            .then(function (response) {
 
-                if (button) {
-
-                    button.textContent =
-                        "Subscribe →";
-
-                    button.disabled = false;
-
+                if (!response.ok) {
+                    throw new Error("failed");
                 }
 
-            }, 3000);
+                if (button) {
+                    button.textContent = "Subscribed \u2713";
+                }
+
+                newsletterForm.reset();
+            })
+            .catch(function () {
+
+                if (button) {
+                    button.textContent = "Try again";
+                }
+            })
+            .then(function () {
+
+                setTimeout(function () {
+
+                    if (button) {
+                        button.textContent = original;
+                        button.disabled = false;
+                    }
+
+                }, 3000);
+            });
 
         }
     );
@@ -2079,7 +2124,7 @@ function buildProductDetail() {
 
                 <div class="pd-actions">
                     <button type="button" class="pd-buy" id="pdBuy">Order Now</button>
-                    <button type="button" class="pd-add" id="pdAdd">Add to Bag</button>
+                    <button type="button" class="pd-add" id="pdAdd">Add to Cart</button>
                 </div>
 
                 <p class="pd-note">You pay when the parcel arrives.</p>
@@ -2128,12 +2173,7 @@ function buildProductDetail() {
         .addEventListener("click", function () {
             addDetailToCart();
             closeProductDetail();
-
-            if (typeof openCheckout === "function") {
-                openCheckout();
-            } else {
-                openCart();
-            }
+            window.location.href = "checkout.html";
         });
 
 
@@ -2503,9 +2543,30 @@ function addDetailToCart() {
 
 /* Card click opens the detail view */
 
+function productSlug(name) {
+    return name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "");
+}
+
+
+function goToProductPage(card) {
+
+    const heading =
+        card.querySelector(".product-info h3");
+
+    if (!heading) return;
+
+    window.location.href =
+        "product.html?p=" +
+        productSlug(heading.textContent.trim());
+}
+
+
 products.forEach(function (card) {
 
-    /* Colour wale product par Quick Add seedha cart mein na daale,
+    /* Colour wale product ka Quick Add uske page par le jaye,
        warna order mein colour hi nahi aayega */
 
     if (card.dataset.colors) {
@@ -2517,7 +2578,7 @@ products.forEach(function (card) {
             quick.addEventListener("click", function (event) {
                 event.stopPropagation();
                 event.preventDefault();
-                openProductDetail(card);
+                goToProductPage(card);
             }, true);
         }
     }
@@ -2530,7 +2591,7 @@ products.forEach(function (card) {
             return;
         }
 
-        openProductDetail(card);
+        goToProductPage(card);
     });
 });
 
@@ -2594,8 +2655,7 @@ document.addEventListener("click", function (event) {
     }
 
     if (event.target.closest(".search-box") ||
-        event.target.closest("#searchOpen") ||
-        event.target.closest(".search-button")) {
+        event.target.closest(".search-trigger")) {
         return;
     }
 
@@ -2618,3 +2678,56 @@ document.addEventListener("keydown", function (event) {
 
     closeWishlist();
 });
+
+/* =========================================================
+   NAVBAR: active link scroll ke sath badle
+========================================================= */
+
+const spySections =
+    document.querySelectorAll("section[id]");
+
+const spyLinks =
+    document.querySelectorAll(".nav-links a[href^='#']");
+
+
+function updateActiveLink() {
+
+    let current = "";
+
+    spySections.forEach(function (section) {
+
+        const top =
+            section.getBoundingClientRect().top;
+
+        /* Navbar ki oonchai ka margin */
+        if (top <= 120) {
+            current = section.id;
+        }
+    });
+
+
+    /* Page ke bilkul neeche pohanch gaye to aakhri section */
+    if (window.innerHeight + window.scrollY >=
+        document.body.offsetHeight - 40) {
+
+        const last = spySections[spySections.length - 1];
+        if (last) current = last.id;
+    }
+
+
+    spyLinks.forEach(function (link) {
+
+        const target =
+            link.getAttribute("href").replace("#", "");
+
+        link.classList.toggle(
+            "active",
+            target === current
+        );
+    });
+}
+
+
+window.addEventListener("scroll", updateActiveLink, { passive: true });
+window.addEventListener("resize", updateActiveLink);
+updateActiveLink();

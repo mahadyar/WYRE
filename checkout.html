@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Checkout — WYRE</title>
+
+    <meta name="description"
+        content="Complete your WYRE order. Cash on delivery across Pakistan.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+
+<body class="checkout-page">
+
+    <header class="co-bar">
+
+        <a href="index.html" class="co-logo">WYRE</a>
+
+        <a href="index.html" class="co-back">
+            &larr; Continue shopping
+        </a>
+
+    </header>
+
+
+    <main class="co-wrap">
+
+        <div class="co-head">
+            <p>SECURE CHECKOUT</p>
+            <h1>Complete your order</h1>
+        </div>
+
+
+        <div class="co-grid">
+
+            <!-- ORDER SUMMARY -->
+
+            <section class="co-summary">
+
+                <h2>Your order</h2>
+
+                <div id="coItems"></div>
+
+                <div class="co-total">
+                    <span>Total</span>
+                    <strong id="coTotal">PKR 0</strong>
+                </div>
+
+                <p class="co-note">
+                    Cash on delivery &middot; 3&ndash;5 working days
+                </p>
+
+            </section>
+
+
+            <!-- DELIVERY FORM -->
+
+            <section class="co-form">
+
+                <h2>Delivery details</h2>
+
+                <form id="coForm" novalidate>
+
+                    <div class="co-field">
+                        <label for="coName">Full name</label>
+                        <input type="text" id="coName" placeholder="Your full name"
+                            autocomplete="name">
+                        <span class="co-error">Please enter your full name.</span>
+                    </div>
+
+                    <div class="co-field">
+                        <label for="coPhone">Phone number</label>
+                        <input type="tel" id="coPhone" placeholder="03XXXXXXXXX"
+                            inputmode="numeric" maxlength="11" autocomplete="tel">
+                        <span class="co-hint">We'll call to confirm your order.</span>
+                        <span class="co-error">Enter an 11-digit number starting with 03.</span>
+                    </div>
+
+                    <div class="co-field">
+                        <label for="coCity">City</label>
+                        <input type="text" id="coCity" placeholder="e.g. Lahore"
+                            autocomplete="address-level2">
+                        <span class="co-error">Please enter your city.</span>
+                    </div>
+
+                    <div class="co-field">
+                        <label for="coAddress">Delivery address</label>
+                        <textarea id="coAddress" rows="4"
+                            placeholder="House / street, area, landmark"
+                            autocomplete="street-address"></textarea>
+                        <span class="co-error">Please enter a complete address.</span>
+                    </div>
+
+                    <div class="co-field">
+                        <label for="coNotes">Order notes <em>(optional)</em></label>
+                        <textarea id="coNotes" rows="2"
+                            placeholder="Anything we should know?"></textarea>
+                    </div>
+
+                    <button type="submit" class="co-submit" id="coSubmit">
+                        Place order
+                    </button>
+
+                    <p class="co-message" id="coMessage"></p>
+
+                    <p class="co-note">
+                        You pay in cash when the parcel arrives.
+                    </p>
+
+                </form>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <script>
+        const FORMSPREE_ENDPOINT = "https://formspree.io/f/xvkoqrna";
+
+        let cart = [];
+
+        try {
+            cart = JSON.parse(localStorage.getItem("wyreCart")) || [];
+        } catch (e) {
+            cart = [];
+        }
+
+
+        function escapeHTML(text) {
+            const div = document.createElement("div");
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+
+        function renderSummary() {
+
+            const box = document.getElementById("coItems");
+            const totalBox = document.getElementById("coTotal");
+            let total = 0;
+
+            if (cart.length === 0) {
+                box.innerHTML =
+                    '<p class="co-empty">Your bag is empty. ' +
+                    '<a href="index.html">Browse the collection</a></p>';
+                totalBox.textContent = "PKR 0";
+                document.getElementById("coSubmit").disabled = true;
+                return;
+            }
+
+            box.innerHTML = "";
+
+            cart.forEach(function (item) {
+
+                const price = Number(item.price) || 0;
+                const qty = Number(item.quantity) || 1;
+                total += price * qty;
+
+                const row = document.createElement("div");
+                row.className = "co-item";
+
+                row.innerHTML =
+                    (item.image
+                        ? '<div class="co-thumb"><img src="' +
+                          escapeHTML(item.image) + '" alt="' +
+                          escapeHTML(item.name) + '"></div>'
+                        : '') +
+                    '<div class="co-item-info">' +
+                        '<strong>' + escapeHTML(item.name) + '</strong>' +
+                        '<span>Qty ' + qty + '</span>' +
+                    '</div>' +
+                    '<span class="co-item-price">PKR ' +
+                        (price * qty).toLocaleString() +
+                    '</span>';
+
+                box.appendChild(row);
+            });
+
+            totalBox.textContent = "PKR " + total.toLocaleString();
+            return total;
+        }
+
+
+        const orderTotal = renderSummary();
+
+
+        const fields = {
+            name:    { el: coName,    ok: v => v.trim().length >= 3 },
+            phone:   { el: coPhone,   ok: v => /^03\d{9}$/.test(v.trim()) },
+            city:    { el: coCity,    ok: v => v.trim().length >= 2 },
+            address: { el: coAddress, ok: v => v.trim().length >= 10 }
+        };
+
+        Object.values(fields).forEach(function (f) {
+            f.el.addEventListener("input", function () {
+                f.el.closest(".co-field").classList.remove("invalid");
+            });
+        });
+
+
+        document.getElementById("coForm")
+            .addEventListener("submit", function (event) {
+
+            event.preventDefault();
+
+            let valid = true;
+
+            Object.values(fields).forEach(function (f) {
+                if (!f.ok(f.el.value)) {
+                    f.el.closest(".co-field").classList.add("invalid");
+                    valid = false;
+                }
+            });
+
+            if (!valid) {
+                document.querySelector(".co-field.invalid input, .co-field.invalid textarea")
+                    .focus();
+                return;
+            }
+
+            const button = document.getElementById("coSubmit");
+            const message = document.getElementById("coMessage");
+
+            button.disabled = true;
+            button.textContent = "Sending order...";
+            message.textContent = "";
+            message.className = "co-message";
+
+            const products = cart.map(function (item) {
+                return item.name + " x" + (item.quantity || 1) +
+                       " — PKR " + (Number(item.price) * (item.quantity || 1));
+            }).join("\n");
+
+            fetch(FORMSPREE_ENDPOINT, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({
+                    customer_name: coName.value.trim(),
+                    phone: coPhone.value.trim(),
+                    city: coCity.value.trim(),
+                    address: coAddress.value.trim(),
+                    notes: coNotes.value.trim(),
+                    products: products,
+                    total: "PKR " + orderTotal.toLocaleString(),
+                    order_date: new Date().toLocaleString()
+                })
+            })
+            .then(function (response) {
+
+                if (!response.ok) {
+                    throw new Error("failed");
+                }
+
+                message.className = "co-message success";
+                message.textContent =
+                    "Order placed. We'll call you shortly to confirm.";
+
+                button.textContent = "Order placed ✓";
+
+                localStorage.removeItem("wyreCart");
+                cart = [];
+                renderSummary();
+
+                setTimeout(function () {
+                    window.location.href = "index.html";
+                }, 3500);
+            })
+            .catch(function () {
+
+                message.className = "co-message error";
+                message.textContent =
+                    "Something went wrong. Please try again, " +
+                    "or WhatsApp us to place the order.";
+
+                button.disabled = false;
+                button.textContent = "Place order";
+            });
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>WYRE</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+
+<body class="product-page">
+
+    <header class="co-bar">
+
+        <a href="index.html" class="co-logo">WYRE</a>
+
+        <a href="index.html#shop" class="co-back">
+            &larr; Back to shop
+        </a>
+
+    </header>
+
+
+    <main class="pp-wrap" id="ppWrap">
+
+        <p class="pp-loading">Loading product…</p>
+
+    </main>
+
+
+    <script>
+        /* =========================================================
+           Product data index.html se hi parha jata hai,
+           taake naam aur price kabhi do jagah alag na ho jayen.
+        ========================================================= */
+
+        function slugify(text) {
+            return text
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/^-|-$/g, "");
+        }
+
+
+        let cart = [];
+
+        try {
+            cart = JSON.parse(localStorage.getItem("wyreCart")) || [];
+        } catch (e) {
+            cart = [];
+        }
+
+
+        function saveCart() {
+            try {
+                localStorage.setItem("wyreCart", JSON.stringify(cart));
+            } catch (e) { }
+        }
+
+
+        let images = [];
+        let defaultImages = [];
+        let index = 0;
+        let qty = 1;
+        let colour = "";
+        let product = null;
+
+
+        const wanted =
+            new URLSearchParams(location.search).get("p");
+
+
+        if (!wanted) {
+            location.replace("index.html#shop");
+        }
+
+
+        fetch("index.html")
+            .then(function (r) { return r.text(); })
+            .then(function (html) {
+
+                const doc =
+                    new DOMParser().parseFromString(html, "text/html");
+
+                const cards =
+                    doc.querySelectorAll(".product-card");
+
+                let match = null;
+
+                cards.forEach(function (card) {
+                    const h3 = card.querySelector(".product-info h3");
+                    if (h3 && slugify(h3.textContent.trim()) === wanted) {
+                        match = card;
+                    }
+                });
+
+                if (!match) {
+                    showMissing();
+                    return;
+                }
+
+                render(match);
+            })
+            .catch(showMissing);
+
+
+        function showMissing() {
+            document.getElementById("ppWrap").innerHTML =
+                '<p class="pp-loading">Product not found. ' +
+                '<a href="index.html#shop">Back to shop</a></p>';
+        }
+
+
+        function render(card) {
+
+            const button = card.querySelector(".quick-add");
+            const name = card.querySelector(".product-info h3").textContent.trim();
+            const category = card.querySelector(".product-info span").textContent.trim();
+            const desc = card.querySelector(".product-info p").textContent.trim();
+            const priceText = card.querySelector(".product-info strong").textContent.trim();
+            const price = button ? Number(button.dataset.price) || 0 : 0;
+            const mainImage = card.querySelector(".product-image img").getAttribute("src");
+
+            document.title = name + " — WYRE";
+
+            product = { name: name, price: price, image: mainImage };
+
+            images = card.dataset.images
+                ? card.dataset.images.split(",").map(function (s) { return s.trim(); })
+                : [mainImage];
+
+            defaultImages = images.slice();
+
+
+            const colourList =
+                (card.dataset.colors || "")
+                    .split(",")
+                    .map(function (s) { return s.trim(); })
+                    .filter(Boolean);
+
+
+            document.getElementById("ppWrap").innerHTML = `
+                <div class="pp-grid">
+
+                    <div class="pp-gallery">
+
+                        <div class="pp-stage">
+                            <div class="pd-track" id="ppTrack"></div>
+                            <button class="pd-arrow prev" id="ppPrev" aria-label="Previous">&#8249;</button>
+                            <button class="pd-arrow next" id="ppNext" aria-label="Next">&#8250;</button>
+                        </div>
+
+                        <div class="pp-thumbs" id="ppThumbs"></div>
+
+                    </div>
+
+
+                    <div class="pp-info">
+
+                        <p class="pd-category">${category}</p>
+                        <h1 class="pp-name">${name}</h1>
+                        <p class="pp-price">${priceText}</p>
+                        <p class="pd-desc">${desc}</p>
+
+                        <div class="pd-meta">
+                            Cash on delivery available<br>
+                            Delivery in 3&ndash;5 working days<br>
+                            Easy exchange within 7 days
+                        </div>
+
+                        <div class="pd-colors-row" id="ppColorsRow" hidden>
+                            <span class="pd-qty-label">
+                                Colour: <b id="ppColorName"></b>
+                            </span>
+                            <div class="pd-colors" id="ppColors"></div>
+                        </div>
+
+                        <div class="pd-qty-row">
+                            <span class="pd-qty-label">Quantity</span>
+                            <div class="pd-qty">
+                                <button type="button" id="ppMinus" aria-label="Decrease">&minus;</button>
+                                <span id="ppQty">1</span>
+                                <button type="button" id="ppPlus" aria-label="Increase">+</button>
+                            </div>
+                        </div>
+
+                        <div class="pd-actions">
+                            <button type="button" class="pd-buy" id="ppBuy">Order Now</button>
+                            <button type="button" class="pd-add" id="ppAdd">Add to Cart</button>
+                        </div>
+
+                        <p class="pd-note" id="ppNote">
+                            You pay when the parcel arrives.
+                        </p>
+
+                    </div>
+
+                </div>
+            `;
+
+            renderColours(colourList);
+            showImages(images);
+            wireControls();
+        }
+
+
+        function showImages(list) {
+
+            images = list.slice();
+            index = 0;
+
+            if (product && images[0]) {
+                product.image = images[0];
+            }
+
+            const track = document.getElementById("ppTrack");
+            const thumbs = document.getElementById("ppThumbs");
+
+            track.innerHTML = "";
+            thumbs.innerHTML = "";
+
+            images.forEach(function (src, i) {
+
+                const slide = document.createElement("div");
+                slide.className = "pd-slide";
+
+                const img = document.createElement("img");
+                img.src = src;
+                img.alt = product ? product.name : "";
+
+                img.addEventListener("error", function () {
+                    const pos = Array.prototype.indexOf.call(track.children, slide);
+                    if (pos > -1 && thumbs.children[pos]) {
+                        thumbs.children[pos].remove();
+                    }
+                    slide.remove();
+                    images = images.filter(function (x) { return x !== src; });
+                    if (track.children.length === 0 && defaultImages.length) {
+                        showImages(defaultImages);
+                        return;
+                    }
+                    refreshArrows();
+                    goTo(0);
+                });
+
+                slide.appendChild(img);
+                track.appendChild(slide);
+
+                const thumb = document.createElement("button");
+                thumb.type = "button";
+                thumb.className = "pp-thumb" + (i === 0 ? " active" : "");
+                thumb.innerHTML = '<img src="' + src + '" alt="">';
+                thumb.addEventListener("click", function () { goTo(i); });
+                thumbs.appendChild(thumb);
+            });
+
+            refreshArrows();
+            goTo(0);
+        }
+
+
+        function refreshArrows() {
+            const track = document.getElementById("ppTrack");
+            const many = track.children.length > 1;
+            document.getElementById("ppPrev").style.display = many ? "" : "none";
+            document.getElementById("ppNext").style.display = many ? "" : "none";
+            document.getElementById("ppThumbs").style.display = many ? "" : "none";
+        }
+
+
+        function goTo(i) {
+
+            const track = document.getElementById("ppTrack");
+            const count = track.children.length;
+
+            if (count === 0) return;
+
+            if (i < 0) i = count - 1;
+            if (i > count - 1) i = 0;
+
+            index = i;
+            track.style.transform = "translateX(-" + (i * 100) + "%)";
+
+            document.querySelectorAll(".pp-thumb").forEach(function (t, n) {
+                t.classList.toggle("active", n === i);
+            });
+        }
+
+
+        function renderColours(list) {
+
+            const row = document.getElementById("ppColorsRow");
+            const box = document.getElementById("ppColors");
+            const label = document.getElementById("ppColorName");
+
+            if (list.length === 0) {
+                row.hidden = true;
+                return;
+            }
+
+            row.hidden = false;
+            box.innerHTML = "";
+
+            list.forEach(function (entry, i) {
+
+                const bits = entry.split("|");
+                const cname = bits[0].trim();
+                const hex = (bits[1] || "#ccc").trim();
+                const shots = (bits[2] || "")
+                    .split(";")
+                    .map(function (x) { return x.trim(); })
+                    .filter(Boolean);
+
+                const swatch = document.createElement("button");
+                swatch.type = "button";
+                swatch.className = "pd-swatch" + (i === 0 ? " active" : "");
+                swatch.style.background = hex;
+                swatch.title = cname;
+                swatch.setAttribute("aria-label", cname);
+
+                swatch.addEventListener("click", function () {
+                    box.querySelectorAll(".pd-swatch").forEach(function (o) {
+                        o.classList.remove("active");
+                    });
+                    swatch.classList.add("active");
+                    colour = cname;
+                    label.textContent = cname;
+                    applyColour(shots);
+                });
+
+                box.appendChild(swatch);
+
+                if (i === 0) {
+                    colour = cname;
+                    label.textContent = cname;
+                }
+            });
+        }
+
+
+        function applyColour(shots) {
+
+            if (shots.length === 0) {
+                showImages(defaultImages);
+                return;
+            }
+
+            const test = new Image();
+            test.onload = function () { showImages(shots); };
+            test.onerror = function () { showImages(defaultImages); };
+            test.src = shots[0];
+        }
+
+
+        function addToCart() {
+
+            if (!product || product.price <= 0) return;
+
+            const label = colour ? product.name + " — " + colour : product.name;
+
+            const existing = cart.find(function (i) { return i.name === label; });
+
+            if (existing) {
+                existing.quantity = Number(existing.quantity || 0) + qty;
+            } else {
+                cart.push({
+                    name: label,
+                    price: product.price,
+                    image: product.image,
+                    quantity: qty
+                });
+            }
+
+            saveCart();
+        }
+
+
+        function wireControls() {
+
+            document.getElementById("ppPrev")
+                .addEventListener("click", function () { goTo(index - 1); });
+
+            document.getElementById("ppNext")
+                .addEventListener("click", function () { goTo(index + 1); });
+
+            document.getElementById("ppMinus")
+                .addEventListener("click", function () {
+                    qty = Math.max(1, qty - 1);
+                    document.getElementById("ppQty").textContent = qty;
+                });
+
+            document.getElementById("ppPlus")
+                .addEventListener("click", function () {
+                    qty = Math.min(10, qty + 1);
+                    document.getElementById("ppQty").textContent = qty;
+                });
+
+            document.getElementById("ppAdd")
+                .addEventListener("click", function () {
+                    addToCart();
+                    const note = document.getElementById("ppNote");
+                    note.textContent = "Added to cart.";
+                    note.className = "pd-note added";
+                    setTimeout(function () {
+                        note.textContent = "You pay when the parcel arrives.";
+                        note.className = "pd-note";
+                    }, 2200);
+                });
+
+            document.getElementById("ppBuy")
+                .addEventListener("click", function () {
+                    addToCart();
+                    location.href = "checkout.html";
+                });
+
+
+            /* Mobile swipe */
+
+            const stage = document.querySelector(".pp-stage");
+            let startX = 0;
+            let moved = false;
+
+            stage.addEventListener("touchstart", function (e) {
+                startX = e.changedTouches[0].clientX;
+                moved = false;
+            }, { passive: true });
+
+            stage.addEventListener("touchmove", function () {
+                moved = true;
+            }, { passive: true });
+
+            stage.addEventListener("touchend", function (e) {
+                if (!moved) return;
+                const diff = e.changedTouches[0].clientX - startX;
+                if (Math.abs(diff) < 45) return;
+                goTo(diff < 0 ? index + 1 : index - 1);
+            }, { passive: true });
+
+
+            document.addEventListener("keydown", function (e) {
+                if (e.key === "ArrowLeft") goTo(index - 1);
+                if (e.key === "ArrowRight") goTo(index + 1);
+            });
+        }
+    </script>
+
+</body>
+
+</html>
