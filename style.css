@@ -2117,3 +2117,112 @@ section[id] {
         margin-bottom: 18px;
     }
 }
+
+/* =========================
+   SEARCH — TOP PANEL
+========================= */
+
+.search-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: auto;
+    inset: auto;
+    background: #F7F6F2;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.08);
+    display: block;
+    padding: 86px 6% 26px;
+    transform: translateY(-100%);
+    transition: transform 0.32s cubic-bezier(.2, .7, .2, 1),
+                opacity 0.2s ease,
+                visibility 0.2s ease;
+}
+
+.search-overlay.active {
+    transform: translateY(0);
+}
+
+.search-box {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    padding-bottom: 6px;
+}
+
+.search-box p {
+    margin-bottom: 6px;
+}
+
+.search-box input {
+    font-size: 22px;
+    padding: 6px 40px 10px 0;
+}
+
+.search-close {
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0;
+}
+
+#searchStatus {
+    margin-top: 12px !important;
+}
+
+@media (max-width: 700px) {
+
+    .search-overlay {
+        padding: 76px 5% 20px;
+    }
+
+    .search-box input {
+        font-size: 18px;
+    }
+}
+
+
+/* =========================
+   WISHLIST
+========================= */
+
+.wishlist-drawer {
+    z-index: 1200;
+}
+
+.wish-add {
+    border: 1px solid rgba(0, 0, 0, 0.22);
+    background: transparent;
+    color: #111;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+    padding: 9px 16px;
+    cursor: pointer;
+    transition: 0.22s ease;
+}
+
+.wish-add:hover {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+}
+
+.wishlist-open svg {
+    display: block;
+}
+
+.wishlist-btn.liked {
+    color: #b3261e;
+}
+
+#wishlistAddAll:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+#wishlistAddAll:disabled:hover {
+    background: #111;
+}

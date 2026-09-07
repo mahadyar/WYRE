@@ -346,27 +346,393 @@ if (searchInput) {
    WISHLIST
 ========================================================= */
 
+let wishlist = [];
+
+try {
+    wishlist = JSON.parse(
+        localStorage.getItem("wyreWishlist")
+    ) || [];
+} catch (e) {
+    wishlist = [];
+}
+
+
+function saveWishlist() {
+    try {
+        localStorage.setItem(
+            "wyreWishlist",
+            JSON.stringify(wishlist)
+        );
+    } catch (e) {
+        /* storage band ho to bhi site chalti rahe */
+    }
+}
+
+
+function readCard(card) {
+
+    const button = card.querySelector(".quick-add");
+    const nameEl = card.querySelector(".product-info h3");
+    const catEl = card.querySelector(".product-info span");
+    const img = card.querySelector(".product-image img");
+
+    return {
+        name: nameEl ? nameEl.textContent.trim() : "",
+        price: button ? Number(button.dataset.price) || 0 : 0,
+        image: img ? img.getAttribute("src") : "",
+        category: catEl ? catEl.textContent.trim() : ""
+    };
+}
+
+
+function inWishlist(name) {
+    return wishlist.some(function (item) {
+        return item.name === name;
+    });
+}
+
+
+function updateWishlistCount() {
+
+    const badge =
+        document.getElementById("wishlistCount");
+
+    if (badge) {
+        badge.textContent = wishlist.length;
+    }
+}
+
+
 const wishlistButtons =
     document.querySelectorAll(".wishlist-btn");
 
 wishlistButtons.forEach(function (button) {
+
+    const card = button.closest(".product-card");
+    const data = card ? readCard(card) : null;
+
+    /* Page khulte hi purani wishlist ke dil bhare hue dikhen */
+
+    if (data && inWishlist(data.name)) {
+        button.classList.add("liked");
+        button.textContent = "♥";
+    }
+
 
     button.addEventListener("click", function (event) {
 
         event.preventDefault();
         event.stopPropagation();
 
-        button.classList.toggle("liked");
+        if (!data) return;
 
-        if (button.classList.contains("liked")) {
-            button.textContent = "♥";
-        } else {
+        if (inWishlist(data.name)) {
+
+            wishlist = wishlist.filter(function (item) {
+                return item.name !== data.name;
+            });
+
+            button.classList.remove("liked");
             button.textContent = "♡";
+
+        } else {
+
+            wishlist.push(data);
+
+            button.classList.add("liked");
+            button.textContent = "♥";
         }
 
+        saveWishlist();
+        updateWishlistCount();
+        renderWishlist();
     });
 
 });
+
+
+/* =========================================================
+   WISHLIST DRAWER
+========================================================= */
+
+function buildWishlistDrawer() {
+
+    if (document.getElementById("wishlistDrawer")) {
+        return;
+    }
+
+    const drawer = document.createElement("div");
+    drawer.className = "cart-drawer wishlist-drawer";
+    drawer.id = "wishlistDrawer";
+
+    drawer.innerHTML = `
+        <div class="cart-header">
+
+            <div>
+                <p>SAVED FOR LATER</p>
+                <h3>Wishlist</h3>
+            </div>
+
+            <button class="cart-close" id="wishlistClose" aria-label="Close wishlist">
+                &times;
+            </button>
+
+        </div>
+
+        <div class="cart-items" id="wishlistItems"></div>
+
+        <div class="cart-footer">
+            <button
+                type="button"
+                class="checkout-btn"
+                id="wishlistAddAll">
+                Move all to bag
+            </button>
+        </div>
+    `;
+
+    document.body.appendChild(drawer);
+
+
+    document.getElementById("wishlistClose")
+        .addEventListener("click", closeWishlist);
+
+    document.getElementById("wishlistAddAll")
+        .addEventListener("click", function () {
+
+            if (wishlist.length === 0) return;
+
+            wishlist.slice().forEach(function (item) {
+                addSavedToCart(item.name);
+            });
+
+            closeWishlist();
+            openCart();
+        });
+}
+
+
+function renderWishlist() {
+
+    buildWishlistDrawer();
+
+    const box =
+        document.getElementById("wishlistItems");
+
+    const addAll =
+        document.getElementById("wishlistAddAll");
+
+    if (!box) return;
+
+    box.innerHTML = "";
+
+
+    if (wishlist.length === 0) {
+
+        box.innerHTML =
+            '<p class="empty-cart">Your wishlist is empty.</p>';
+
+        if (addAll) addAll.disabled = true;
+
+        return;
+    }
+
+    if (addAll) addAll.disabled = false;
+
+
+    wishlist.forEach(function (item) {
+
+        const row = document.createElement("div");
+        row.className = "wyre-cart-item";
+
+        const thumb =
+            item.image
+                ? `<div class="wyre-cart-thumb">
+                       <img src="${escapeHTML(item.image)}"
+                            alt="${escapeHTML(item.name)}"
+                            loading="lazy">
+                   </div>`
+                : "";
+
+        row.innerHTML = `
+            ${thumb}
+
+            <div class="wyre-cart-info">
+
+                <div class="wyre-cart-top">
+
+                    <strong>
+                        ${escapeHTML(item.name)}
+                    </strong>
+
+                    <button
+                        type="button"
+                        class="wyre-remove wish-remove"
+                        data-name="${escapeHTML(item.name)}"
+                        aria-label="Remove from wishlist">
+                        &times;
+                    </button>
+
+                </div>
+
+                <span class="wyre-cart-price">
+                    PKR ${Number(item.price).toLocaleString()}
+                </span>
+
+                <div class="wyre-cart-bottom">
+
+                    <button
+                        type="button"
+                        class="wish-add"
+                        data-name="${escapeHTML(item.name)}">
+                        Add to bag
+                    </button>
+
+                </div>
+
+            </div>
+        `;
+
+        box.appendChild(row);
+    });
+
+
+    box.querySelectorAll(".wish-remove").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+            removeFromWishlist(btn.dataset.name);
+        });
+    });
+
+    box.querySelectorAll(".wish-add").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+            addSavedToCart(btn.dataset.name);
+        });
+    });
+}
+
+
+function removeFromWishlist(name) {
+
+    wishlist = wishlist.filter(function (item) {
+        return item.name !== name;
+    });
+
+    saveWishlist();
+    updateWishlistCount();
+    renderWishlist();
+
+    /* Card wala dil bhi khali kar do */
+
+    document.querySelectorAll(".product-card")
+        .forEach(function (card) {
+
+            const heading =
+                card.querySelector(".product-info h3");
+
+            if (heading &&
+                heading.textContent.trim() === name) {
+
+                const heart =
+                    card.querySelector(".wishlist-btn");
+
+                if (heart) {
+                    heart.classList.remove("liked");
+                    heart.textContent = "♡";
+                }
+            }
+        });
+}
+
+
+function addSavedToCart(name) {
+
+    /* Colour wale product ke liye detail modal kholo,
+       warna colour chune baghair order chala jayega */
+
+    let target = null;
+
+    document.querySelectorAll(".product-card")
+        .forEach(function (card) {
+
+            const heading =
+                card.querySelector(".product-info h3");
+
+            if (heading &&
+                heading.textContent.trim() === name) {
+                target = card;
+            }
+        });
+
+    if (target && target.dataset.colors) {
+        closeWishlist();
+        openProductDetail(target);
+        return;
+    }
+
+
+    const saved = wishlist.find(function (item) {
+        return item.name === name;
+    });
+
+    if (!saved) return;
+
+
+    const existing = cart.find(function (item) {
+        return item.name === saved.name;
+    });
+
+    if (existing) {
+        existing.quantity = Number(existing.quantity || 0) + 1;
+    } else {
+        cart.push({
+            name: saved.name,
+            price: saved.price,
+            image: saved.image,
+            quantity: 1
+        });
+    }
+
+    saveCart();
+    updateCart();
+}
+
+
+function openWishlist() {
+
+    renderWishlist();
+
+    const drawer =
+        document.getElementById("wishlistDrawer");
+
+    if (drawer) {
+        drawer.classList.add("active");
+    }
+
+    document.body.style.overflow = "hidden";
+}
+
+
+function closeWishlist() {
+
+    const drawer =
+        document.getElementById("wishlistDrawer");
+
+    if (drawer) {
+        drawer.classList.remove("active");
+    }
+
+    document.body.style.overflow = "";
+}
+
+
+const wishlistOpen =
+    document.getElementById("wishlistOpen");
+
+if (wishlistOpen) {
+    wishlistOpen.addEventListener("click", openWishlist);
+}
+
+updateWishlistCount();
 
 
 /* =========================================================
@@ -2215,3 +2581,40 @@ window.addEventListener("orientationchange", setAppHeight);
 if (window.visualViewport) {
     window.visualViewport.addEventListener("resize", setAppHeight);
 }
+
+/* Search panel ke bahar click karne par band ho jaye */
+
+document.addEventListener("click", function (event) {
+
+    const overlay =
+        document.getElementById("searchOverlay");
+
+    if (!overlay || !overlay.classList.contains("active")) {
+        return;
+    }
+
+    if (event.target.closest(".search-box") ||
+        event.target.closest("#searchOpen") ||
+        event.target.closest(".search-button")) {
+        return;
+    }
+
+    overlay.classList.remove("active");
+});
+
+
+/* Escape se bhi band */
+
+document.addEventListener("keydown", function (event) {
+
+    if (event.key !== "Escape") return;
+
+    const overlay =
+        document.getElementById("searchOverlay");
+
+    if (overlay) {
+        overlay.classList.remove("active");
+    }
+
+    closeWishlist();
+});
