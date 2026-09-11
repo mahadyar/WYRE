@@ -65,25 +65,63 @@
 
             <div class="nav-actions">
 
-                <!-- Search -->
+                <!-- Search (anchored dropdown) -->
 
-                <button class="nav-icon search-trigger" aria-label="Search">
+                <div class="nav-search" id="navSearch">
 
-                    <svg width="21" height="21" viewBox="0 0 24 24" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
+                    <button class="nav-icon search-trigger" id="searchTrigger"
+                        aria-label="Search" aria-expanded="false"
+                        aria-controls="searchOverlay">
 
-                        <circle cx="11" cy="11" r="7"
-                            stroke="currentColor"
-                            stroke-width="1.8" />
+                        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
 
-                        <path d="M16.5 16.5L21 21"
-                            stroke="currentColor"
-                            stroke-width="1.8"
-                            stroke-linecap="round" />
+                            <circle cx="11" cy="11" r="7"
+                                stroke="currentColor"
+                                stroke-width="1.8" />
 
-                    </svg>
+                            <path d="M16.5 16.5L21 21"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round" />
 
-                </button>
+                        </svg>
+
+                    </button>
+
+
+                    <div class="search-overlay" id="searchOverlay">
+
+                        <div class="search-box">
+
+                            <div class="search-field">
+
+                                <input
+                                    type="text"
+                                    id="searchInput"
+                                    placeholder="Search products"
+                                    autocomplete="off"
+                                    spellcheck="false"
+                                    aria-label="Search products">
+
+                                <button class="search-close" id="searchClose"
+                                    aria-label="Close search">
+                                    &times;
+                                </button>
+
+                            </div>
+
+                            <div class="search-results" id="searchResults"
+                                role="listbox" aria-label="Search results"></div>
+
+                            <p class="search-status" id="searchStatus"></p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
 
 
                 <!-- Wishlist -->
@@ -153,32 +191,6 @@
         </div>
 
     </header>
-
-
-
-    <!-- ================= SEARCH OVERLAY ================= -->
-
-    <div class="search-overlay" id="searchOverlay">
-
-        <div class="search-box">
-
-            <button class="search-close" id="searchClose" aria-label="Close search">
-                ×
-            </button>
-
-            <p>
-                SEARCH WYRE
-            </p>
-
-            <input
-                type="text"
-                id="searchInput"
-                placeholder="Search products..."
-                autocomplete="off">
-
-        </div>
-
-    </div>
 
 
 

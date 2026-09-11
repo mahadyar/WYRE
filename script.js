@@ -54,35 +54,94 @@ if (menuToggle && navLinks) {
 
 
 /* =========================================================
-   SEARCH
+   SEARCH — panel search icon ke neeche khulta hai
 ========================================================= */
 
 const searchButton = document.querySelector(".search-trigger");
 const searchOverlay = document.getElementById("searchOverlay");
 const searchClose = document.getElementById("searchClose");
 const searchInput = document.getElementById("searchInput");
+const searchResults = document.getElementById("searchResults");
+const searchStatus = document.getElementById("searchStatus");
 
-if (searchButton && searchOverlay) {
-    searchButton.addEventListener("click", function () {
-        searchOverlay.classList.add("active");
 
-        if (searchInput) {
-            setTimeout(function () {
-                searchInput.focus();
-            }, 200);
-        }
-    });
+function openSearch() {
+
+    if (!searchOverlay) {
+        return;
+    }
+
+    searchOverlay.classList.add("active");
+
+    if (searchButton) {
+        searchButton.setAttribute("aria-expanded", "true");
+    }
+
+    if (searchInput) {
+
+        setTimeout(function () {
+            searchInput.focus();
+        }, 120);
+
+        renderSearchResults(searchInput.value);
+    }
 }
 
-if (searchClose && searchOverlay) {
-    searchClose.addEventListener("click", function () {
-        searchOverlay.classList.remove("active");
 
-        if (searchInput) {
-            searchInput.value = "";
-            showAllProducts();
+function closeSearch(clear) {
+
+    if (!searchOverlay) {
+        return;
+    }
+
+    searchOverlay.classList.remove("active");
+
+    if (searchButton) {
+        searchButton.setAttribute("aria-expanded", "false");
+    }
+
+    if (clear && searchInput) {
+
+        searchInput.value = "";
+
+        if (searchResults) {
+            searchResults.innerHTML = "";
+        }
+
+        if (searchStatus) {
+            searchStatus.textContent = "";
+        }
+
+        showAllProducts();
+    }
+}
+
+
+if (searchButton && searchOverlay) {
+
+    searchButton.addEventListener("click", function () {
+
+        if (searchOverlay.classList.contains("active")) {
+            closeSearch(false);
+        } else {
+            openSearch();
+        }
+
+    });
+
+}
+
+
+if (searchClose) {
+
+    searchClose.addEventListener("click", function () {
+        closeSearch(true);
+
+        if (searchButton) {
+            searchButton.focus();
         }
     });
+
 }
 
 
@@ -245,64 +304,306 @@ function runProductSearch(searchValue) {
 }
 
 
-if (searchInput) {
+/* =========================================================
+   SEARCH RESULTS — dropdown ke andar live list
+========================================================= */
 
-    /* Result counter inside the search box */
+const SEARCH_LIMIT = 6;
 
-    const searchStatus =
-        document.createElement("p");
 
-    searchStatus.id = "searchStatus";
+function readSearchCard(card) {
 
-    searchStatus.style.cssText =
-        "margin-top:18px;font-size:11px;letter-spacing:1px;color:#777;";
+    const nameEl = card.querySelector(".product-info h3");
+    const catEl = card.querySelector(".product-info span");
+    const descEl = card.querySelector(".product-info p");
+    const priceEl = card.querySelector(".product-info strong");
+    const imgEl = card.querySelector(".product-image img");
 
-    if (searchInput.parentNode) {
+    return {
+        card: card,
+        name: nameEl ? nameEl.textContent.trim() : "",
+        category: catEl ? catEl.textContent.trim() : "",
+        description: descEl ? descEl.textContent.trim() : "",
+        price: priceEl ? priceEl.textContent.trim() : "",
+        image: imgEl ? imgEl.getAttribute("src") : ""
+    };
+}
 
-        searchInput.parentNode.appendChild(
-            searchStatus
-        );
 
+function scoreSearchCard(item, query) {
+
+    const name = item.name.toLowerCase();
+    const category = (
+        item.category + " " + (item.card.dataset.category || "")
+    ).toLowerCase();
+
+    if (name.startsWith(query)) {
+        return 4;
     }
 
+    if (name.includes(query)) {
+        return 3;
+    }
 
-    searchInput.addEventListener("input", function () {
+    if (category.includes(query)) {
+        return 2;
+    }
 
-        const searchValue =
-            searchInput.value.toLowerCase().trim();
+    if (item.description.toLowerCase().includes(query)) {
+        return 1;
+    }
+
+    return 0;
+}
 
 
-        const found =
-            runProductSearch(searchValue);
+function findMatches(query) {
 
+    const scored = [];
 
-        if (searchValue === "") {
+    products.forEach(function (card) {
 
-            searchStatus.textContent = "";
+        const item = readSearchCard(card);
+        const score = scoreSearchCard(item, query);
 
-        } else if (found === 0) {
-
-            searchStatus.textContent =
-                "No products match \u201C" +
-                searchInput.value.trim() +
-                "\u201D";
-
-        } else {
-
-            searchStatus.textContent =
-                found +
-                (found === 1
-                    ? " product found \u2014 press Enter to view"
-                    : " products found \u2014 press Enter to view");
-
+        if (score > 0) {
+            scored.push({ item: item, score: score });
         }
 
     });
 
+    scored.sort(function (a, b) {
+        return b.score - a.score;
+    });
 
-    /* Enter = close overlay and jump to the results */
+    return scored.map(function (entry) {
+        return entry.item;
+    });
+}
+
+
+function renderSearchResults(rawValue) {
+
+    if (!searchResults) {
+        return 0;
+    }
+
+    const query = rawValue.toLowerCase().trim();
+
+
+    /* Khali input — grid poora, list khali */
+
+    if (query === "") {
+
+        searchResults.innerHTML = "";
+
+        if (searchStatus) {
+            searchStatus.textContent = "";
+        }
+
+        showAllProducts();
+
+        return 0;
+    }
+
+
+    const matches = findMatches(query);
+
+
+    /* Shop grid bhi sath hi filter hota rahe */
+
+    runProductSearch(query);
+
+
+    if (matches.length === 0) {
+
+        searchResults.innerHTML =
+            '<p class="search-empty">Koi product match nahi hua. ' +
+            '<button type="button" id="searchReset">Show everything</button></p>';
+
+        const reset = document.getElementById("searchReset");
+
+        if (reset) {
+
+            reset.addEventListener("click", function () {
+                searchInput.value = "";
+                renderSearchResults("");
+                searchInput.focus();
+            });
+
+        }
+
+        if (searchStatus) {
+            searchStatus.textContent = "NO MATCHES";
+        }
+
+        return 0;
+    }
+
+
+    searchResults.innerHTML = "";
+
+
+    matches.slice(0, SEARCH_LIMIT).forEach(function (item) {
+
+        const hit = document.createElement("button");
+
+        hit.type = "button";
+        hit.className = "search-hit";
+        hit.setAttribute("role", "option");
+
+        const thumb = document.createElement("img");
+        thumb.src = item.image;
+        thumb.alt = "";
+
+        const text = document.createElement("span");
+        text.className = "search-hit-text";
+
+        const name = document.createElement("b");
+        name.textContent = item.name;
+
+        const category = document.createElement("span");
+        category.textContent = item.category;
+
+        text.appendChild(name);
+        text.appendChild(category);
+
+        const price = document.createElement("strong");
+        price.textContent = item.price;
+
+        hit.appendChild(thumb);
+        hit.appendChild(text);
+        hit.appendChild(price);
+
+
+        hit.addEventListener("click", function () {
+
+            closeSearch(false);
+
+            if (typeof openProductDetail === "function") {
+                openProductDetail(item.card);
+            } else {
+                scrollToCard(item.card);
+            }
+
+        });
+
+
+        searchResults.appendChild(hit);
+
+    });
+
+
+    if (searchStatus) {
+
+        searchStatus.textContent =
+            matches.length === 1
+                ? "1 PRODUCT"
+                : matches.length + " PRODUCTS" +
+                  (matches.length > SEARCH_LIMIT
+                      ? " — PRESS ENTER FOR ALL"
+                      : "");
+
+    }
+
+
+    return matches.length;
+}
+
+
+function scrollToCard(card) {
+
+    const shopSection = document.getElementById("shop");
+
+    if (shopSection) {
+
+        shopSection.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+    }
+
+    if (card) {
+
+        setTimeout(function () {
+
+            card.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+
+        }, 400);
+
+    }
+}
+
+
+function moveSearchActive(direction) {
+
+    if (!searchResults) {
+        return;
+    }
+
+    const hits = Array.prototype.slice.call(
+        searchResults.querySelectorAll(".search-hit")
+    );
+
+    if (hits.length === 0) {
+        return;
+    }
+
+    let index = hits.findIndex(function (hit) {
+        return hit.classList.contains("active");
+    });
+
+    hits.forEach(function (hit) {
+        hit.classList.remove("active");
+    });
+
+    if (direction === "down") {
+        index = index + 1 >= hits.length ? 0 : index + 1;
+    } else {
+        index = index <= 0 ? hits.length - 1 : index - 1;
+    }
+
+    hits[index].classList.add("active");
+
+    if (hits[index].scrollIntoView) {
+        hits[index].scrollIntoView({ block: "nearest" });
+    }
+}
+
+
+if (searchInput) {
+
+    let searchTimer = null;
+
+
+    searchInput.addEventListener("input", function () {
+
+        clearTimeout(searchTimer);
+
+        searchTimer = setTimeout(function () {
+            renderSearchResults(searchInput.value);
+        }, 110);
+
+    });
+
 
     searchInput.addEventListener("keydown", function (event) {
+
+        if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+
+            event.preventDefault();
+
+            moveSearchActive(
+                event.key === "ArrowDown" ? "down" : "up"
+            );
+
+            return;
+        }
+
 
         if (event.key !== "Enter") {
             return;
@@ -311,34 +612,29 @@ if (searchInput) {
         event.preventDefault();
 
 
-        const searchValue =
-            searchInput.value.toLowerCase().trim();
+        /* Arrow se select kiya hua result kholein */
 
+        const active = searchResults
+            ? searchResults.querySelector(".search-hit.active")
+            : null;
 
-        if (runProductSearch(searchValue) === 0) {
+        if (active) {
+            active.click();
             return;
         }
 
 
-        if (searchOverlay) {
+        /* Warna poori grid dikhaen aur shop tak scroll karein */
 
-            searchOverlay.classList.remove("active");
+        const query = searchInput.value.toLowerCase().trim();
 
+        if (query === "" || runProductSearch(query) === 0) {
+            return;
         }
 
+        closeSearch(false);
 
-        const shopSection =
-            document.getElementById("shop");
-
-
-        if (shopSection) {
-
-            shopSection.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
-
-        }
+        scrollToCard(null);
 
     });
 
@@ -1957,13 +2253,7 @@ document.addEventListener(
 
         if (event.key === "Escape") {
 
-            if (searchOverlay) {
-
-                searchOverlay.classList.remove(
-                    "active"
-                );
-
-            }
+            closeSearch(false);
 
 
             closeCartDrawer();
@@ -2654,12 +2944,11 @@ document.addEventListener("click", function (event) {
         return;
     }
 
-    if (event.target.closest(".search-box") ||
-        event.target.closest(".search-trigger")) {
+    if (event.target.closest(".nav-search")) {
         return;
     }
 
-    overlay.classList.remove("active");
+    closeSearch(false);
 });
 
 
@@ -2672,8 +2961,14 @@ document.addEventListener("keydown", function (event) {
     const overlay =
         document.getElementById("searchOverlay");
 
-    if (overlay) {
-        overlay.classList.remove("active");
+    if (overlay && overlay.classList.contains("active")) {
+
+        closeSearch(false);
+
+        if (searchButton) {
+            searchButton.focus();
+        }
+
     }
 
     closeWishlist();

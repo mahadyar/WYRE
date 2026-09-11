@@ -127,6 +127,77 @@
     </main>
 
 
+
+    <!-- ================= ORDER CONFIRMATION ================= -->
+
+    <div class="thanks" id="thanks" aria-hidden="true">
+
+        <div class="thanks-card" role="dialog" aria-modal="true"
+            aria-labelledby="thanksTitle">
+
+            <svg class="thanks-tick" viewBox="0 0 52 52" fill="none"
+                aria-hidden="true">
+
+                <circle cx="26" cy="26" r="24"
+                    stroke="currentColor" stroke-width="1.5" />
+
+                <path d="M15 27 L23 35 L38 18"
+                    stroke="currentColor" stroke-width="2.4"
+                    stroke-linecap="round" stroke-linejoin="round" />
+
+            </svg>
+
+            <h2 id="thanksTitle">
+                Thank you, <span id="thanksName">friend</span>
+            </h2>
+
+            <p class="thanks-lede">
+                Your order is with us. We'll call you shortly to confirm
+                the details before it ships.
+            </p>
+
+            <dl class="thanks-meta">
+
+                <div class="thanks-row">
+                    <dt>Order number</dt>
+                    <dd id="thanksId">&mdash;</dd>
+                </div>
+
+                <div class="thanks-row">
+                    <dt>Items</dt>
+                    <dd id="thanksItems">&mdash;</dd>
+                </div>
+
+                <div class="thanks-row">
+                    <dt>Pay on delivery</dt>
+                    <dd id="thanksTotal">&mdash;</dd>
+                </div>
+
+                <div class="thanks-row">
+                    <dt>Delivering to</dt>
+                    <dd id="thanksCity">&mdash;</dd>
+                </div>
+
+            </dl>
+
+            <p class="thanks-note" id="thanksNote">
+                Keep the cash ready when the parcel arrives.
+                Delivery takes 3&ndash;5 working days.
+            </p>
+
+            <div class="thanks-actions">
+
+                <a class="thanks-btn primary" id="thanksHome" href="index.html">
+                    BACK TO HOME
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
     <script>
         const FORMSPREE_ENDPOINT = "https://formspree.io/f/xvkoqrna";
 
@@ -197,6 +268,56 @@
         const orderTotal = renderSummary();
 
 
+
+        /* Order number: WYRE-YYMMDD-XXXX */
+
+        function makeOrderId() {
+
+            const now = new Date();
+
+            const stamp =
+                String(now.getFullYear()).slice(2) +
+                String(now.getMonth() + 1).padStart(2, "0") +
+                String(now.getDate()).padStart(2, "0");
+
+            const random =
+                Math.random().toString(36).slice(2, 6).toUpperCase();
+
+            return "WYRE-" + stamp + "-" + random;
+        }
+
+
+        const ORDER_ID = makeOrderId();
+
+
+        function showThanks(details) {
+
+            const overlay = document.getElementById("thanks");
+
+            document.getElementById("thanksName").textContent =
+                details.name.split(" ")[0] || "friend";
+
+            document.getElementById("thanksId").textContent =
+                details.orderId;
+
+            document.getElementById("thanksItems").textContent =
+                details.count + (details.count === 1 ? " item" : " items");
+
+            document.getElementById("thanksTotal").textContent =
+                "PKR " + details.total.toLocaleString();
+
+            document.getElementById("thanksCity").textContent =
+                details.city;
+
+            overlay.classList.add("active");
+            overlay.setAttribute("aria-hidden", "false");
+
+            document.body.style.overflow = "hidden";
+
+            document.getElementById("thanksHome").focus();
+        }
+
+
         const fields = {
             name:    { el: coName,    ok: v => v.trim().length >= 3 },
             phone:   { el: coPhone,   ok: v => /^03\d{9}$/.test(v.trim()) },
@@ -239,6 +360,10 @@
             message.textContent = "";
             message.className = "co-message";
 
+            const itemCount = cart.reduce(function (sum, item) {
+                return sum + (Number(item.quantity) || 1);
+            }, 0);
+
             const products = cart.map(function (item) {
                 return item.name + " x" + (item.quantity || 1) +
                        " — PKR " + (Number(item.price) * (item.quantity || 1));
@@ -258,6 +383,7 @@
                     notes: coNotes.value.trim(),
                     products: products,
                     total: "PKR " + orderTotal.toLocaleString(),
+                    order_id: ORDER_ID,
                     order_date: new Date().toLocaleString()
                 })
             })
@@ -267,9 +393,16 @@
                     throw new Error("failed");
                 }
 
-                message.className = "co-message success";
-                message.textContent =
-                    "Order placed. We'll call you shortly to confirm.";
+                const placed = {
+                    orderId: ORDER_ID,
+                    name: coName.value.trim(),
+                    city: coCity.value.trim(),
+                    count: itemCount,
+                    total: orderTotal
+                };
+
+                message.className = "co-message";
+                message.textContent = "";
 
                 button.textContent = "Order placed ✓";
 
@@ -277,9 +410,7 @@
                 cart = [];
                 renderSummary();
 
-                setTimeout(function () {
-                    window.location.href = "index.html";
-                }, 3500);
+                showThanks(placed);
             })
             .catch(function () {
 
