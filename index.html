@@ -30,161 +30,229 @@
 
     <header class="navbar">
 
-        <div class="nav-container">
+        <div class="nav-shell">
 
-            <!-- Logo -->
-            <a href="#home" class="logo">
-                WYRE
-            </a>
+            <div class="nav-container">
 
-
-            <!-- Desktop Navigation -->
-
-            <nav class="nav-links">
-
-                <a href="#home" class="nav-link active">
-                    Home
+                <!-- Logo -->
+                <a href="#home" class="logo">
+                    WYRE
                 </a>
 
-                <a href="#shop" class="nav-link">
-                    Shop
-                </a>
 
-                <a href="#collections" class="nav-link">
-                    Collections
-                </a>
+                <!-- Desktop Navigation -->
 
-                <a href="#about" class="nav-link">
-                    About
-                </a>
+                <nav class="nav-links" id="navLinks">
 
-            </nav>
+                    <a href="#home" class="nav-link active">
+                        Home
+                    </a>
 
 
-            <!-- Right Navigation -->
-
-            <div class="nav-actions">
-
-                <!-- Search (anchored dropdown) -->
-
-                <div class="nav-search" id="navSearch">
-
-                    <button class="nav-icon search-trigger" id="searchTrigger"
-                        aria-label="Search" aria-expanded="false"
-                        aria-controls="searchOverlay">
-
-                        <svg width="21" height="21" viewBox="0 0 24 24" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-
-                            <circle cx="11" cy="11" r="7"
-                                stroke="currentColor"
-                                stroke-width="1.8" />
-
-                            <path d="M16.5 16.5L21 21"
-                                stroke="currentColor"
-                                stroke-width="1.8"
-                                stroke-linecap="round" />
-
-                        </svg>
-
-                    </button>
+                    <a href="#shop" class="nav-link">
+                        Shop
+                    </a>
 
 
-                    <div class="search-overlay" id="searchOverlay">
+                    <!-- Collections: mega menu -->
 
-                        <div class="search-box">
+                    <div class="nav-item" data-nav-item>
 
-                            <div class="search-field">
+                        <button type="button" class="nav-link nav-trigger"
+                            aria-expanded="false" aria-controls="megaCollections"
+                            data-nav-target="#collections">
 
-                                <input
-                                    type="text"
-                                    id="searchInput"
-                                    placeholder="Search products"
-                                    autocomplete="off"
-                                    spellcheck="false"
-                                    aria-label="Search products">
+                            <span class="nav-trigger-label">Collections</span>
 
-                                <button class="search-close" id="searchClose"
-                                    aria-label="Close search">
-                                    &times;
-                                </button>
+                            <svg class="nav-caret" width="10" height="6"
+                                viewBox="0 0 10 6" fill="none"
+                                aria-hidden="true">
+                                <path d="M1 1L5 5L9 1" stroke="currentColor"
+                                    stroke-width="1.5" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+
+                        </button>
+
+
+                        <div class="mega" id="megaCollections">
+
+                            <div class="mega-main">
+
+                                <p class="mega-label">
+                                    SHOP BY CATEGORY
+                                </p>
+
+                                <div class="mega-grid">
+
+                                    <a href="#shop" class="mega-item"
+                                        data-nav-filter="caps">
+
+                                        <span class="mega-dot"
+                                            style="--dot:#2e2c28"></span>
+
+                                        <span class="mega-text">
+                                            <strong>Caps</strong>
+                                            <em>Structured fits, clean logos,
+                                                built for daily wear.</em>
+                                        </span>
+
+                                    </a>
+
+                                    <a href="#shop" class="mega-item"
+                                        data-nav-filter="shirts">
+
+                                        <span class="mega-dot"
+                                            style="--dot:#3f4a63"></span>
+
+                                        <span class="mega-text">
+                                            <strong>Shirts</strong>
+                                            <em>Soft cottons that work on their
+                                                own or layered.</em>
+                                        </span>
+
+                                    </a>
+
+                                    <a href="#shop" class="mega-item"
+                                        data-nav-filter="pants">
+
+                                        <span class="mega-dot"
+                                            style="--dot:#7d6a55"></span>
+
+                                        <span class="mega-text">
+                                            <strong>Pants</strong>
+                                            <em>Relaxed through the leg, tidy at
+                                                the hem.</em>
+                                        </span>
+
+                                    </a>
+
+                                    <a href="#shop" class="mega-item"
+                                        data-nav-filter="trousers">
+
+                                        <span class="mega-dot"
+                                            style="--dot:#55645c"></span>
+
+                                        <span class="mega-text">
+                                            <strong>Trousers</strong>
+                                            <em>Sharper cuts for days you want to
+                                                dress it up.</em>
+                                        </span>
+
+                                    </a>
+
+                                </div>
+
+                                <a href="#shop" class="mega-all"
+                                    data-nav-filter="all">
+                                    View all products
+                                </a>
 
                             </div>
 
-                            <div class="search-results" id="searchResults"
-                                role="listbox" aria-label="Search results"></div>
 
-                            <p class="search-status" id="searchStatus"></p>
+                            <a href="#shop" class="mega-feature"
+                                data-nav-filter="all">
+
+                                <img src="cap-1.jpg"
+                                    alt="WYRE new collection">
+
+                                <span class="mega-feature-text">
+                                    <strong>Everyday. Elevated.</strong>
+                                    <em>Modern essentials in one small,
+                                        careful collection.</em>
+                                </span>
+
+                            </a>
 
                         </div>
 
                     </div>
 
+                    <a href="#about" class="nav-link">
+                        About
+                    </a>
+
+                </nav>
+
+
+                <!-- Right Navigation -->
+
+                <div class="nav-actions">
+
+                    <!-- Wishlist -->
+
+                    <button class="cart-button wishlist-open" id="wishlistOpen"
+                        aria-label="Open wishlist">
+
+                        <svg width="21" height="21" viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+
+                            <path d="M12 20.5C12 20.5 3.5 15.5 3.5 9.6C3.5 7 5.5 5 8 5C9.7 5 11.2 6 12 7.4C12.8 6 14.3 5 16 5C18.5 5 20.5 7 20.5 9.6C20.5 15.5 12 20.5 12 20.5Z"
+                                stroke="currentColor"
+                                stroke-width="1.7"
+                                stroke-linecap="round"
+                                stroke-linejoin="round" />
+
+                        </svg>
+
+                        <span id="wishlistCount">
+                            0
+                        </span>
+
+                    </button>
+
+
+                    <!-- Cart -->
+
+                    <button class="cart-button" id="cartOpen"
+                        aria-label="Open shopping cart">
+
+                        <svg width="21" height="21" viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+
+                            <path d="M3 4H5L7.2 15.2C7.4 16.2 8.3 17 9.3 17H17.5C18.5 17 19.4 16.3 19.7 15.3L21 9H6"
+                                stroke="currentColor"
+                                stroke-width="1.7"
+                                stroke-linecap="round"
+                                stroke-linejoin="round" />
+
+                            <circle cx="10" cy="20" r="1.4"
+                                fill="currentColor" />
+
+                            <circle cx="18" cy="20" r="1.4"
+                                fill="currentColor" />
+
+                        </svg>
+
+                        <span id="cartCount">
+                            0
+                        </span>
+
+                    </button>
+
+
+                    <!-- CTA -->
+
+                    <a href="#shop" class="nav-cta">
+                        Shop now
+                    </a>
+
+
+                    <!-- Mobile Menu -->
+
+                    <button class="mobile-menu-btn" id="menuToggle"
+                        aria-label="Open menu" aria-expanded="false">
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                    </button>
+
                 </div>
-
-
-
-                <!-- Wishlist -->
-
-                <button class="cart-button wishlist-open" id="wishlistOpen" aria-label="Open wishlist">
-
-                    <svg width="21" height="21" viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-
-                        <path d="M12 20.5C12 20.5 3.5 15.5 3.5 9.6C3.5 7 5.5 5 8 5C9.7 5 11.2 6 12 7.4C12.8 6 14.3 5 16 5C18.5 5 20.5 7 20.5 9.6C20.5 15.5 12 20.5 12 20.5Z"
-                            stroke="currentColor"
-                            stroke-width="1.7"
-                            stroke-linecap="round"
-                            stroke-linejoin="round" />
-
-                    </svg>
-
-                    <span id="wishlistCount">
-                        0
-                    </span>
-
-                </button>
-
-
-                <!-- Cart -->
-
-                <button class="cart-button" id="cartOpen" aria-label="Open shopping cart">
-
-                    <svg width="21" height="21" viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
-
-                        <path d="M3 4H5L7.2 15.2C7.4 16.2 8.3 17 9.3 17H17.5C18.5 17 19.4 16.3 19.7 15.3L21 9H6"
-                            stroke="currentColor"
-                            stroke-width="1.7"
-                            stroke-linecap="round"
-                            stroke-linejoin="round" />
-
-                        <circle cx="10" cy="20" r="1.4"
-                            fill="currentColor" />
-
-                        <circle cx="18" cy="20" r="1.4"
-                            fill="currentColor" />
-
-                    </svg>
-
-                    <span id="cartCount">
-                        0
-                    </span>
-
-                </button>
-
-
-                <!-- Mobile Menu -->
-
-                <button class="mobile-menu-btn" id="menuToggle" aria-label="Open menu">
-
-                    <span></span>
-                    <span></span>
-                    <span></span>
-
-                </button>
 
             </div>
 

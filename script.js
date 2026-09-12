@@ -38,19 +38,233 @@ if (navbar) {
 const menuToggle = document.getElementById("menuToggle");
 const navLinks = document.querySelector(".nav-links");
 
+/* Mobile par mega menu accordion ban jata hai */
+function isMobileNav() {
+    return window.matchMedia("(max-width: 700px)").matches;
+}
+
+function closeDrawer() {
+
+    if (!navLinks || !menuToggle) return;
+
+    navLinks.classList.remove("active");
+    menuToggle.classList.remove("active");
+    menuToggle.setAttribute("aria-expanded", "false");
+
+    closeAllDropdowns();
+}
+
+
 if (menuToggle && navLinks) {
+
     menuToggle.addEventListener("click", function () {
-        navLinks.classList.toggle("active");
-        menuToggle.classList.toggle("active");
+
+        const open = !navLinks.classList.contains("active");
+
+        navLinks.classList.toggle("active", open);
+        menuToggle.classList.toggle("active", open);
+        menuToggle.setAttribute("aria-expanded", open ? "true" : "false");
+
+        if (!open) closeAllDropdowns();
     });
 
     navLinks.querySelectorAll("a").forEach(function (link) {
         link.addEventListener("click", function () {
-            navLinks.classList.remove("active");
-            menuToggle.classList.remove("active");
+            closeDrawer();
         });
     });
 }
+
+
+/* =========================================================
+   MEGA MENU — desktop par hover, mobile par accordion
+========================================================= */
+
+const navItems =
+    Array.prototype.slice.call(
+        document.querySelectorAll("[data-nav-item]")
+    );
+
+
+/* Nav trigger ka apna section (jaise #collections) */
+
+function goToNavTarget(selector) {
+
+    if (!selector) return;
+
+    const section = document.querySelector(selector);
+
+    if (!section) return;
+
+    section.scrollIntoView({ behavior: "smooth" });
+
+    if (history.replaceState) {
+        history.replaceState(null, "", selector);
+    }
+}
+
+
+function closeAllDropdowns(except) {
+
+    navItems.forEach(function (item) {
+
+        if (item === except) return;
+
+        item.classList.remove("open");
+
+        const trigger = item.querySelector(".nav-trigger");
+        if (trigger) trigger.setAttribute("aria-expanded", "false");
+    });
+}
+
+
+function openDropdown(item) {
+
+    closeAllDropdowns(item);
+
+    item.classList.add("open");
+
+    const trigger = item.querySelector(".nav-trigger");
+    if (trigger) trigger.setAttribute("aria-expanded", "true");
+}
+
+
+function closeDropdown(item) {
+
+    item.classList.remove("open");
+
+    const trigger = item.querySelector(".nav-trigger");
+    if (trigger) trigger.setAttribute("aria-expanded", "false");
+}
+
+
+navItems.forEach(function (item) {
+
+    const trigger = item.querySelector(".nav-trigger");
+    let hoverTimer = null;
+
+
+    /* Hover (sirf desktop) */
+
+    item.addEventListener("mouseenter", function () {
+
+        if (isMobileNav()) return;
+
+        clearTimeout(hoverTimer);
+        openDropdown(item);
+    });
+
+
+    item.addEventListener("mouseleave", function () {
+
+        if (isMobileNav()) return;
+
+        hoverTimer = setTimeout(function () {
+            closeDropdown(item);
+        }, 140);
+    });
+
+
+    /* Click / keyboard
+
+       Mobile par tap sirf accordion khole/band kare.
+
+       Desktop par: menu band hai to pehle khule (keyboard aur touch
+       ke liye), aur agar hover se already khula hai to click apne
+       section par le jaye. */
+
+    if (trigger) {
+
+        trigger.addEventListener("click", function (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            const isOpen = item.classList.contains("open");
+
+            if (isMobileNav()) {
+
+                if (isOpen) {
+                    closeDropdown(item);
+                } else {
+                    openDropdown(item);
+                }
+
+                return;
+            }
+
+            if (isOpen) {
+
+                closeDropdown(item);
+                goToNavTarget(trigger.dataset.navTarget);
+
+            } else {
+                openDropdown(item);
+            }
+        });
+    }
+});
+
+
+/* Bahar click karne par band */
+
+document.addEventListener("click", function (event) {
+
+    if (navItems.length === 0) return;
+
+    const insideNav = event.target.closest(".nav-links");
+
+    if (!insideNav) closeAllDropdowns();
+});
+
+
+/* Escape se band */
+
+document.addEventListener("keydown", function (event) {
+
+    if (event.key === "Escape") {
+        closeAllDropdowns();
+        if (isMobileNav()) closeDrawer();
+    }
+});
+
+
+/* Desktop par wapis aane par accordion state saaf */
+
+window.addEventListener("resize", function () {
+    if (!isMobileNav()) closeAllDropdowns();
+});
+
+
+/* =========================================================
+   MEGA MENU LINKS — category filter chalao
+========================================================= */
+
+document.querySelectorAll("[data-nav-filter]").forEach(function (link) {
+
+    link.addEventListener("click", function (event) {
+
+        event.preventDefault();
+
+        const wanted = link.dataset.navFilter;
+
+        const matchingFilter =
+            document.querySelector(
+                '.filter-btn[data-filter="' + wanted + '"]'
+            );
+
+        if (matchingFilter) matchingFilter.click();
+
+        closeAllDropdowns();
+        closeDrawer();
+
+        const shopSection = document.getElementById("shop");
+
+        if (shopSection) {
+            shopSection.scrollIntoView({ behavior: "smooth" });
+        }
+    });
+});
 
 
 /* =========================================================
@@ -2982,7 +3196,7 @@ const spySections =
     document.querySelectorAll("section[id]");
 
 const spyLinks =
-    document.querySelectorAll(".nav-links a[href^='#']");
+    document.querySelectorAll(".nav-links > a[href^='#']");
 
 
 function updateActiveLink() {
