@@ -95,8 +95,12 @@ a {
     align-items: center;
 }
 
+/* Grid item by default poori column bhar deta hai — is se logo ke
+   aage ka khaali space bhi clickable ho jata tha. */
+
 .logo {
     flex-shrink: 0;
+    justify-self: start;
 }
 
 .logo img {
