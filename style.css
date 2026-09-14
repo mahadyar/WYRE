@@ -84,15 +84,37 @@ a {
     box-shadow: 0 14px 34px rgba(17, 17, 17, 0.13);
 }
 
+/* Logo: wordmark image. Height fix hai, width auto — is liye
+   width/height attributes HTML mein diye hain taake load hote
+   waqt layout na hile. */
+
 .logo,
-.footer-logo {
-    font-size: 25px;
-    font-weight: 700;
-    letter-spacing: 5px;
+.footer-logo,
+.co-logo {
+    display: inline-flex;
+    align-items: center;
 }
 
 .logo {
     flex-shrink: 0;
+}
+
+.logo img {
+    display: block;
+    height: 21px;
+    width: auto;
+}
+
+.footer-logo img {
+    display: block;
+    height: 23px;
+    width: auto;
+}
+
+.co-logo img {
+    display: block;
+    height: 18px;
+    width: auto;
 }
 
 
@@ -1243,7 +1265,7 @@ a {
 }
 
 .footer-logo {
-    display: inline-block;
+    display: inline-flex;
     margin-bottom: 15px;
 }
 
@@ -1359,6 +1381,14 @@ a {
         grid-template-columns: 1fr auto;
     }
 
+    .logo img {
+        height: 17px;
+    }
+
+    .co-logo img {
+        height: 16px;
+    }
+
     .nav-links {
         display: none;
     }
@@ -1457,10 +1487,12 @@ a {
 
 @media (max-width: 450px) {
 
-    .logo,
-    .footer-logo {
-        font-size: 21px;
-        letter-spacing: 4px;
+    .logo img {
+        height: 15px;
+    }
+
+    .footer-logo img {
+        height: 20px;
     }
 
     .nav-actions {
@@ -2927,9 +2959,6 @@ section[id] {
 }
 
 .co-logo {
-    font-size: 19px;
-    font-weight: 700;
-    letter-spacing: 5px;
     color: #111;
     text-decoration: none;
 }
@@ -3440,34 +3469,87 @@ section[id] {
     transform: translateY(0);
 }
 
-.thanks-tick {
-    width: 58px;
-    height: 58px;
-    color: #3F6B4A;
+.thanks-bag {
+    width: 62px;
+    height: 62px;
+    color: #111;
     margin-bottom: 20px;
+    overflow: visible;
+    transform-origin: 50% 92%;
 }
 
-.thanks-tick circle {
-    stroke-dasharray: 151;
-    stroke-dashoffset: 151;
+.thanks-bag .bag-body {
+    stroke-dasharray: 145;
+    stroke-dashoffset: 145;
 }
 
-.thanks-tick path {
-    stroke-dasharray: 40;
-    stroke-dashoffset: 40;
+.thanks-bag .bag-handle {
+    stroke-dasharray: 44;
+    stroke-dashoffset: 44;
 }
 
-.thanks.active .thanks-tick circle {
-    animation: thanksDraw 0.55s ease forwards;
+.thanks-bag .bag-item {
+    opacity: 0;
 }
 
-.thanks.active .thanks-tick path {
-    animation: thanksDraw 0.35s ease 0.45s forwards;
+/* Pehle bag bane, phir handle, phir item andar gire,
+   aur aakhir mein bag halka sa settle ho jaye. */
+
+.thanks.active .thanks-bag .bag-body {
+    animation: bagDraw 0.5s ease forwards;
 }
 
-@keyframes thanksDraw {
+.thanks.active .thanks-bag .bag-handle {
+    animation: bagDraw 0.4s ease 0.34s forwards;
+}
+
+.thanks.active .thanks-bag .bag-item {
+    animation: bagItemDrop 0.72s 0.6s forwards;
+}
+
+.thanks.active .thanks-bag {
+    animation: bagSettle 0.45s ease 1.26s;
+}
+
+@keyframes bagDraw {
     to {
         stroke-dashoffset: 0;
+    }
+}
+
+@keyframes bagItemDrop {
+
+    0% {
+        opacity: 0;
+        transform: translateY(-9px);
+        animation-timing-function: ease-out;
+    }
+
+    32% {
+        opacity: 1;
+        transform: translateY(0);
+        animation-timing-function: cubic-bezier(.5, 0, .9, .3);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(29px);
+    }
+}
+
+@keyframes bagSettle {
+
+    0%,
+    100% {
+        transform: scale(1, 1);
+    }
+
+    30% {
+        transform: scale(1.05, 0.94);
+    }
+
+    65% {
+        transform: scale(0.98, 1.02);
     }
 }
 
@@ -3575,9 +3657,20 @@ section[id] {
         transform: none;
     }
 
-    .thanks-tick circle,
-    .thanks-tick path {
-        stroke-dashoffset: 0;
+    .thanks.active .thanks-bag,
+    .thanks.active .thanks-bag .bag-body,
+    .thanks.active .thanks-bag .bag-handle,
+    .thanks.active .thanks-bag .bag-item {
         animation: none;
+    }
+
+    .thanks.active .thanks-bag .bag-body,
+    .thanks.active .thanks-bag .bag-handle {
+        stroke-dashoffset: 0;
+    }
+
+    .thanks.active .thanks-bag .bag-item {
+        opacity: 1;
+        transform: translateY(29px);
     }
 }
