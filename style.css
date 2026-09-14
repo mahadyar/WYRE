@@ -733,7 +733,16 @@ a {
     overflow: hidden;
 }
 
-/* Hero image is now inside HTML */
+/* Hero media wrapper — parallax isi par lagta hai. Hero se thora
+   bara rakha hai taake move hote waqt kinare khaali na dikhein. */
+
+.hero-media {
+    position: absolute;
+    inset: -8% 0;
+    z-index: 0;
+    will-change: transform;
+}
+
 .hero-image {
     position: absolute;
     inset: 0;
@@ -742,6 +751,113 @@ a {
     object-fit: cover;
     object-position: center;
     z-index: 0;
+    opacity: 0;
+    animation:
+        heroIn 1.7s cubic-bezier(.16, .84, .24, 1) forwards,
+        heroDrift 30s ease-in-out 1.7s infinite alternate;
+}
+
+/* Load par settle hoti hai, phir bohot dheere drift karti rehti hai */
+
+@keyframes heroIn {
+
+    from {
+        opacity: 0;
+        transform: scale(1.14);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes heroDrift {
+
+    from {
+        transform: scale(1) translate3d(0, 0, 0);
+    }
+
+    to {
+        transform: scale(1.07) translate3d(-1.2%, -0.8%, 0);
+    }
+}
+
+
+/* Hero text ek block ki jagah stagger ho kar aata hai.
+   Parent ka reveal band, kaam children karte hain — baaki site
+   ka .reveal waisa hi rehta hai. */
+
+.hero .hero-content.reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+}
+
+.hero-line {
+    display: block;
+}
+
+.hero-small,
+.hero-line,
+.hero-content p,
+.hero-content .primary-btn {
+    opacity: 0;
+    transform: translateY(26px);
+    transition:
+        opacity 0.9s ease,
+        transform 0.9s cubic-bezier(.2, .7, .2, 1);
+}
+
+.hero-content.show .hero-small,
+.hero-content.show .hero-line,
+.hero-content.show p,
+.hero-content.show .primary-btn {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.hero-content.show .hero-small {
+    transition-delay: 0.18s;
+}
+
+.hero-content.show .hero-line:nth-child(1) {
+    transition-delay: 0.32s;
+}
+
+.hero-content.show .hero-line:nth-child(2) {
+    transition-delay: 0.46s;
+}
+
+.hero-content.show p {
+    transition-delay: 0.64s;
+}
+
+.hero-content.show .primary-btn {
+    transition-delay: 0.78s;
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+
+    .hero-media {
+        transform: none !important;
+    }
+
+    .hero-image {
+        opacity: 1;
+        transform: none;
+        animation: none;
+    }
+
+    .hero-small,
+    .hero-line,
+    .hero-content p,
+    .hero-content .primary-btn {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
 }
 
 /* Hero overlay */

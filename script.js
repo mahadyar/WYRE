@@ -1375,6 +1375,32 @@ if (cartOverlay) {
 const quickAddButtons =
     document.querySelectorAll(".quick-add");
 
+/* Colour wale product ka pehla (default) colour nikal lo, taake
+   Quick Add se bhi order mein colour chala jaye — product page bhi
+   yahi format use karta hai: "Name — Colour" */
+
+function defaultColour(card) {
+
+    if (!card || !card.dataset.colors) return null;
+
+    const first = card.dataset.colors.split(",")[0];
+
+    if (!first) return null;
+
+    const bits = first.split("|");
+
+    const shots = (bits[2] || "")
+        .split(";")
+        .map(function (s) { return s.trim(); })
+        .filter(Boolean);
+
+    return {
+        name: (bits[0] || "").trim(),
+        image: shots[0] || ""
+    };
+}
+
+
 quickAddButtons.forEach(function (button) {
 
     button.addEventListener("click", function (event) {
@@ -1382,14 +1408,22 @@ quickAddButtons.forEach(function (button) {
         event.preventDefault();
         event.stopPropagation();
 
-        const name =
+        const card = button.closest(".product-card");
+        const colour = defaultColour(card);
+
+        let name =
             button.dataset.name || "WYRE Product";
 
         const price =
             Number(button.dataset.price) || 0;
 
-        const image =
+        let image =
             button.dataset.image || "";
+
+        if (colour && colour.name) {
+            name = name + " \u2014 " + colour.name;
+            if (colour.image) image = colour.image;
+        }
 
         if (price <= 0) {
             alert("Product price is missing.");
@@ -3070,24 +3104,6 @@ function goToProductPage(card) {
 
 products.forEach(function (card) {
 
-    /* Colour wale product ka Quick Add uske page par le jaye,
-       warna order mein colour hi nahi aayega */
-
-    if (card.dataset.colors) {
-
-        const quick = card.querySelector(".quick-add");
-
-        if (quick) {
-
-            quick.addEventListener("click", function (event) {
-                event.stopPropagation();
-                event.preventDefault();
-                goToProductPage(card);
-            }, true);
-        }
-    }
-
-
     card.addEventListener("click", function (event) {
 
         if (event.target.closest(".quick-add") ||
@@ -3240,3 +3256,67 @@ function updateActiveLink() {
 window.addEventListener("scroll", updateActiveLink, { passive: true });
 window.addEventListener("resize", updateActiveLink);
 updateActiveLink();
+
+
+/* =========================================================
+   HERO PARALLAX
+   Sirf desktop par, aur reduce-motion par bilkul band.
+========================================================= */
+
+const heroSection = document.querySelector(".hero");
+const heroMedia = document.querySelector(".hero-media");
+
+if (heroSection && heroMedia) {
+
+    const heroReduceMotion =
+        window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    let heroTicking = false;
+
+
+    function heroParallaxAllowed() {
+        return window.innerWidth > 900 && !heroReduceMotion.matches;
+    }
+
+
+    function updateHeroParallax() {
+
+        heroTicking = false;
+
+        if (!heroParallaxAllowed()) {
+            heroMedia.style.transform = "";
+            return;
+        }
+
+        const height = heroSection.offsetHeight;
+        const offset = window.scrollY || window.pageYOffset || 0;
+
+        /* Hero screen se nikal gaya to hisaab ki zaroorat nahi */
+        if (offset > height) return;
+
+        const limit = height * 0.07;
+        const shift = Math.min(offset * 0.18, limit);
+
+        heroMedia.style.transform =
+            "translate3d(0, " + shift.toFixed(1) + "px, 0)";
+    }
+
+
+    function requestHeroParallax() {
+
+        if (heroTicking) return;
+
+        heroTicking = true;
+        requestAnimationFrame(updateHeroParallax);
+    }
+
+
+    window.addEventListener("scroll", requestHeroParallax, { passive: true });
+    window.addEventListener("resize", requestHeroParallax);
+
+    if (heroReduceMotion.addEventListener) {
+        heroReduceMotion.addEventListener("change", requestHeroParallax);
+    }
+
+    updateHeroParallax();
+}
