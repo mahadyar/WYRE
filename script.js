@@ -3320,3 +3320,232 @@ if (heroSection && heroMedia) {
 
     updateHeroParallax();
 }
+
+
+/* =========================================================
+   MY ORDERS
+   Order checkout par "wyreOrders" mein save hota hai.
+   Backend nahi hai, is liye ye list sirf usi device par
+   rehti hai jahan order diya gaya tha.
+========================================================= */
+
+const WYRE_ORDERS_KEY = "wyreOrders";
+
+
+function readOrders() {
+
+    try {
+        const saved = JSON.parse(
+            localStorage.getItem(WYRE_ORDERS_KEY)
+        );
+
+        return Array.isArray(saved) ? saved : [];
+
+    } catch (e) {
+        return [];
+    }
+}
+
+
+function formatOrderDate(value) {
+
+    const when = new Date(value);
+
+    if (isNaN(when.getTime())) return "";
+
+    return when.toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+    });
+}
+
+
+function updateOrdersCount() {
+
+    const badge = document.getElementById("ordersCount");
+
+    if (badge) {
+        badge.textContent = readOrders().length;
+    }
+}
+
+
+function buildOrdersDrawer() {
+
+    if (document.getElementById("ordersDrawer")) {
+        return;
+    }
+
+    const drawer = document.createElement("div");
+    drawer.className = "cart-drawer orders-drawer";
+    drawer.id = "ordersDrawer";
+
+    drawer.innerHTML = `
+        <div class="cart-header">
+
+            <div>
+                <p>YOUR PURCHASES</p>
+                <h3>My Orders</h3>
+            </div>
+
+            <button class="cart-close" id="ordersClose"
+                aria-label="Close my orders">
+                &times;
+            </button>
+
+        </div>
+
+        <div class="cart-items" id="ordersItems"></div>
+
+        <div class="cart-footer">
+            <p class="orders-note" id="ordersNote"></p>
+        </div>
+    `;
+
+    document.body.appendChild(drawer);
+
+    document.getElementById("ordersClose")
+        .addEventListener("click", closeOrders);
+}
+
+
+function renderOrders() {
+
+    buildOrdersDrawer();
+
+    const box = document.getElementById("ordersItems");
+    const note = document.getElementById("ordersNote");
+
+    if (!box) return;
+
+    const orders = readOrders();
+
+    box.innerHTML = "";
+
+
+    if (orders.length === 0) {
+
+        box.innerHTML =
+            '<p class="empty-cart">' +
+            "You haven't placed an order yet." +
+            "</p>";
+
+        if (note) {
+            note.textContent =
+                "Once you place an order it will show up here.";
+        }
+
+        return;
+    }
+
+
+    if (note) {
+        note.textContent =
+            "Saved on this device only. Quote your order number " +
+            "when you contact us about an order.";
+    }
+
+
+    orders.forEach(function (order) {
+
+        const card = document.createElement("div");
+        card.className = "order-card";
+
+        const items = Array.isArray(order.items) ? order.items : [];
+
+        let lines = "";
+
+        items.forEach(function (item) {
+
+            const qty = Number(item.quantity) || 1;
+            const price = Number(item.price) || 0;
+
+            lines +=
+                '<div class="order-line">' +
+                    (item.image
+                        ? '<div class="order-thumb"><img src="' +
+                          escapeHTML(item.image) + '" alt=""></div>'
+                        : '<div class="order-thumb"></div>') +
+                    '<div class="order-line-info">' +
+                        '<strong>' + escapeHTML(item.name || "Item") +
+                        '</strong>' +
+                        '<span>Qty ' + qty + '</span>' +
+                    '</div>' +
+                    '<span class="order-line-price">PKR ' +
+                        (price * qty).toLocaleString() +
+                    '</span>' +
+                '</div>';
+        });
+
+
+        const total = Number(order.total) || 0;
+        const city = order.city ? " \u00b7 " + escapeHTML(order.city) : "";
+
+        card.innerHTML =
+            '<div class="order-top">' +
+                '<div>' +
+                    '<p class="order-id">' +
+                        escapeHTML(order.orderId || "\u2014") +
+                    '</p>' +
+                    '<span class="order-date">' +
+                        escapeHTML(formatOrderDate(order.placedAt)) +
+                    '</span>' +
+                '</div>' +
+                '<span class="order-status">Order placed</span>' +
+            '</div>' +
+
+            '<div class="order-lines">' + lines + '</div>' +
+
+            '<div class="order-foot">' +
+                '<span>Cash on delivery' + city + '</span>' +
+                '<strong>PKR ' + total.toLocaleString() + '</strong>' +
+            '</div>';
+
+        box.appendChild(card);
+    });
+}
+
+
+function openOrders() {
+
+    renderOrders();
+
+    const drawer = document.getElementById("ordersDrawer");
+
+    if (drawer) {
+        drawer.classList.add("active");
+    }
+
+    document.body.style.overflow = "hidden";
+}
+
+
+function closeOrders() {
+
+    const drawer = document.getElementById("ordersDrawer");
+
+    if (drawer) {
+        drawer.classList.remove("active");
+    }
+
+    document.body.style.overflow = "";
+}
+
+
+const ordersOpen = document.getElementById("ordersOpen");
+
+if (ordersOpen) {
+    ordersOpen.addEventListener("click", openOrders);
+}
+
+
+document.addEventListener("keydown", function (event) {
+
+    if (event.key === "Escape") {
+        closeOrders();
+    }
+});
+
+
+updateOrdersCount();

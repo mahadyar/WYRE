@@ -5,11 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Checkout — WYRE</title>
+    <title>WYRE — Everyday. Elevated.</title>
 
     <meta name="description"
-        content="Complete your WYRE order. Cash on delivery across Pakistan.">
+        content="WYRE — modern essentials designed for everyday wear. Explore our collection of caps, shirts, pants and trousers.">
 
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -17,432 +18,1617 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
         rel="stylesheet">
 
+    <!-- CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 
 
-<body class="checkout-page">
-
-    <header class="co-bar">
-
-        <a href="index.html" class="co-logo" aria-label="WYRE — home">
-            <img src="wyre-logo-dark.png" alt="WYRE"
-                width="946" height="197">
-        </a>
-
-        <a href="index.html" class="co-back">
-            &larr; Continue shopping
-        </a>
-
-    </header>
+<body>
 
 
-    <main class="co-wrap">
+    <!-- ================= NAVBAR ================= -->
 
-        <div class="co-head">
-            <p>SECURE CHECKOUT</p>
-            <h1>Complete your order</h1>
-        </div>
+    <header class="navbar">
 
+        <div class="nav-shell">
 
-        <div class="co-grid">
+            <div class="nav-container">
 
-            <!-- ORDER SUMMARY -->
-
-            <section class="co-summary">
-
-                <h2>Your order</h2>
-
-                <div id="coItems"></div>
-
-                <div class="co-total">
-                    <span>Total</span>
-                    <strong id="coTotal">PKR 0</strong>
-                </div>
-
-                <p class="co-note">
-                    Cash on delivery &middot; 3&ndash;5 working days
-                </p>
-
-            </section>
+                <!-- Logo -->
+                <a href="#home" class="logo" aria-label="WYRE — home">
+                    <img src="wyre-logo-dark.png" alt="WYRE"
+                        width="946" height="197">
+                </a>
 
 
-            <!-- DELIVERY FORM -->
+                <!-- Desktop Navigation -->
 
-            <section class="co-form">
+                <nav class="nav-links" id="navLinks">
 
-                <h2>Delivery details</h2>
+                    <a href="#home" class="nav-link active">
+                        Home
+                    </a>
 
-                <form id="coForm" novalidate>
+                    <a href="#about" class="nav-link">
+                        About
+                    </a>
 
-                    <div class="co-field">
-                        <label for="coName">Full name</label>
-                        <input type="text" id="coName" placeholder="Your full name"
-                            autocomplete="name">
-                        <span class="co-error">Please enter your full name.</span>
+
+                    <a href="#shop" class="nav-link">
+                        Shop
+                    </a>
+
+
+                    <!-- Collections: mega menu -->
+
+                    <div class="nav-item" data-nav-item>
+
+                        <button type="button" class="nav-link nav-trigger"
+                            aria-expanded="false" aria-controls="megaCollections"
+                            data-nav-target="#collections">
+
+                            <span class="nav-trigger-label">Collections</span>
+
+                            <svg class="nav-caret" width="10" height="6"
+                                viewBox="0 0 10 6" fill="none"
+                                aria-hidden="true">
+                                <path d="M1 1L5 5L9 1" stroke="currentColor"
+                                    stroke-width="1.5" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+
+                        </button>
+
+
+                        <div class="mega" id="megaCollections">
+
+                            <div class="mega-main">
+
+                                <p class="mega-label">
+                                    SHOP BY CATEGORY
+                                </p>
+
+                                <div class="mega-grid">
+
+                                    <a href="#shop" class="mega-item"
+                                        data-nav-filter="caps">
+
+                                        <span class="mega-dot"
+                                            style="--dot:#2e2c28"></span>
+
+                                        <span class="mega-text">
+                                            <strong>Caps</strong>
+                                            <em>Structured fits, clean logos,
+                                                built for daily wear.</em>
+                                        </span>
+
+                                    </a>
+
+                                    <a href="#shop" class="mega-item"
+                                        data-nav-filter="shirts">
+
+                                        <span class="mega-dot"
+                                            style="--dot:#3f4a63"></span>
+
+                                        <span class="mega-text">
+                                            <strong>Shirts</strong>
+                                            <em>Soft cottons that work on their
+                                                own or layered.</em>
+                                        </span>
+
+                                    </a>
+
+                                    <a href="#shop" class="mega-item"
+                                        data-nav-filter="pants">
+
+                                        <span class="mega-dot"
+                                            style="--dot:#7d6a55"></span>
+
+                                        <span class="mega-text">
+                                            <strong>Pants</strong>
+                                            <em>Relaxed through the leg, tidy at
+                                                the hem.</em>
+                                        </span>
+
+                                    </a>
+
+                                    <a href="#shop" class="mega-item"
+                                        data-nav-filter="trousers">
+
+                                        <span class="mega-dot"
+                                            style="--dot:#55645c"></span>
+
+                                        <span class="mega-text">
+                                            <strong>Trousers</strong>
+                                            <em>Sharper cuts for days you want to
+                                                dress it up.</em>
+                                        </span>
+
+                                    </a>
+
+                                </div>
+
+                                <a href="#shop" class="mega-all"
+                                    data-nav-filter="all">
+                                    View all products
+                                </a>
+
+                            </div>
+
+
+                            <a href="#shop" class="mega-feature"
+                                data-nav-filter="all">
+
+                                <img src="cap-1.jpg"
+                                    alt="WYRE new collection">
+
+                                <span class="mega-feature-text">
+                                    <strong>Everyday. Elevated.</strong>
+                                    <em>Modern essentials in one small,
+                                        careful collection.</em>
+                                </span>
+
+                            </a>
+
+                        </div>
+
                     </div>
 
-                    <div class="co-field">
-                        <label for="coPhone">Phone number</label>
-                        <input type="tel" id="coPhone" placeholder="03XXXXXXXXX"
-                            inputmode="numeric" maxlength="11" autocomplete="tel">
-                        <span class="co-hint">We'll call to confirm your order.</span>
-                        <span class="co-error">Enter an 11-digit number starting with 03.</span>
-                    </div>
 
-                    <div class="co-field">
-                        <label for="coCity">City</label>
-                        <input type="text" id="coCity" placeholder="e.g. Lahore"
-                            autocomplete="address-level2">
-                        <span class="co-error">Please enter your city.</span>
-                    </div>
+                </nav>
 
-                    <div class="co-field">
-                        <label for="coAddress">Delivery address</label>
-                        <textarea id="coAddress" rows="4"
-                            placeholder="House / street, area, landmark"
-                            autocomplete="street-address"></textarea>
-                        <span class="co-error">Please enter a complete address.</span>
-                    </div>
 
-                    <div class="co-field">
-                        <label for="coNotes">Order notes <em>(optional)</em></label>
-                        <textarea id="coNotes" rows="2"
-                            placeholder="Anything we should know?"></textarea>
-                    </div>
+                <!-- Right Navigation -->
 
-                    <button type="submit" class="co-submit" id="coSubmit">
-                        Place order
+                <div class="nav-actions">
+
+                    <!-- Wishlist -->
+
+                    <button class="cart-button wishlist-open" id="wishlistOpen"
+                        aria-label="Open wishlist">
+
+                        <svg width="21" height="21" viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+
+                            <path d="M12 20.5C12 20.5 3.5 15.5 3.5 9.6C3.5 7 5.5 5 8 5C9.7 5 11.2 6 12 7.4C12.8 6 14.3 5 16 5C18.5 5 20.5 7 20.5 9.6C20.5 15.5 12 20.5 12 20.5Z"
+                                stroke="currentColor"
+                                stroke-width="1.7"
+                                stroke-linecap="round"
+                                stroke-linejoin="round" />
+
+                        </svg>
+
+                        <span id="wishlistCount">
+                            0
+                        </span>
+
                     </button>
 
-                    <p class="co-message" id="coMessage"></p>
 
-                    <p class="co-note">
-                        You pay in cash when the parcel arrives.
-                    </p>
+                    <!-- My Orders -->
 
-                </form>
+                    <button class="cart-button orders-open" id="ordersOpen"
+                        aria-label="Open my orders">
 
-            </section>
+                        <svg width="21" height="21" viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
 
-        </div>
+                            <path d="M3.6 7.9L12 3.6L20.4 7.9V16.1L12 20.4L3.6 16.1V7.9Z"
+                                stroke="currentColor"
+                                stroke-width="1.7"
+                                stroke-linecap="round"
+                                stroke-linejoin="round" />
 
-    </main>
+                            <path d="M3.6 7.9L12 12.2L20.4 7.9"
+                                stroke="currentColor"
+                                stroke-width="1.7"
+                                stroke-linecap="round"
+                                stroke-linejoin="round" />
 
+                            <path d="M12 12.2V20.4"
+                                stroke="currentColor"
+                                stroke-width="1.7"
+                                stroke-linecap="round"
+                                stroke-linejoin="round" />
 
+                        </svg>
 
-    <!-- ================= ORDER CONFIRMATION ================= -->
+                        <span id="ordersCount">
+                            0
+                        </span>
 
-    <div class="thanks" id="thanks" aria-hidden="true">
-
-        <div class="thanks-card" role="dialog" aria-modal="true"
-            aria-labelledby="thanksTitle">
-
-            <svg class="thanks-bag" viewBox="0 0 64 64" fill="none"
-                aria-hidden="true">
-
-                <!-- handle -->
-
-                <path class="bag-handle"
-                    d="M25 30V22.5a7 7 0 0 1 14 0V30"
-                    stroke="currentColor" stroke-width="2.2"
-                    stroke-linecap="round" />
-
-
-                <!-- item jo bag mein girta hai -->
-
-                <g class="bag-item">
-                    <rect x="26" y="3" width="12" height="12" rx="2.8"
-                        fill="#3F6B4A" />
-                </g>
+                    </button>
 
 
-                <!-- bag ka front: solid fill, taake item peechay chhup jaye -->
+                    <!-- Cart -->
 
-                <path class="bag-body"
-                    d="M13.5 29.5H50.5L48 55.5A4.2 4.2 0 0 1 43.8 59.3H20.2A4.2 4.2 0 0 1 16 55.5Z"
-                    fill="#F7F6F2" stroke="currentColor" stroke-width="2.2"
-                    stroke-linejoin="round" />
+                    <button class="cart-button" id="cartOpen"
+                        aria-label="Open shopping cart">
 
-            </svg>
+                        <svg width="21" height="21" viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
 
-            <h2 id="thanksTitle">
-                Thank you, <span id="thanksName">friend</span>
-            </h2>
+                            <path d="M3 4H5L7.2 15.2C7.4 16.2 8.3 17 9.3 17H17.5C18.5 17 19.4 16.3 19.7 15.3L21 9H6"
+                                stroke="currentColor"
+                                stroke-width="1.7"
+                                stroke-linecap="round"
+                                stroke-linejoin="round" />
 
-            <p class="thanks-lede">
-                Your order is with us. We'll call you shortly to confirm
-                the details before it ships.
-            </p>
+                            <circle cx="10" cy="20" r="1.4"
+                                fill="currentColor" />
 
-            <dl class="thanks-meta">
+                            <circle cx="18" cy="20" r="1.4"
+                                fill="currentColor" />
 
-                <div class="thanks-row">
-                    <dt>Order number</dt>
-                    <dd id="thanksId">&mdash;</dd>
+                        </svg>
+
+                        <span id="cartCount">
+                            0
+                        </span>
+
+                    </button>
+
+
+                    <!-- CTA -->
+
+                    <a href="#shop" class="nav-cta">
+                        Shop now
+                    </a>
+
+
+                    <!-- Mobile Menu -->
+
+                    <button class="mobile-menu-btn" id="menuToggle"
+                        aria-label="Open menu" aria-expanded="false">
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                    </button>
+
                 </div>
-
-                <div class="thanks-row">
-                    <dt>Items</dt>
-                    <dd id="thanksItems">&mdash;</dd>
-                </div>
-
-                <div class="thanks-row">
-                    <dt>Pay on delivery</dt>
-                    <dd id="thanksTotal">&mdash;</dd>
-                </div>
-
-                <div class="thanks-row">
-                    <dt>Delivering to</dt>
-                    <dd id="thanksCity">&mdash;</dd>
-                </div>
-
-            </dl>
-
-            <p class="thanks-note" id="thanksNote">
-                Keep the cash ready when the parcel arrives.
-                Delivery takes 3&ndash;5 working days.
-            </p>
-
-            <div class="thanks-actions">
-
-                <a class="thanks-btn primary" id="thanksHome" href="index.html">
-                    BACK TO HOME
-                </a>
 
             </div>
 
         </div>
 
-    </div>
-
-
-    <script>
-        const FORMSPREE_ENDPOINT = "https://formspree.io/f/xvkoqrna";
-
-        let cart = [];
-
-        try {
-            cart = JSON.parse(localStorage.getItem("wyreCart")) || [];
-        } catch (e) {
-            cart = [];
-        }
-
-
-        function escapeHTML(text) {
-            const div = document.createElement("div");
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-
-        function renderSummary() {
-
-            const box = document.getElementById("coItems");
-            const totalBox = document.getElementById("coTotal");
-            let total = 0;
-
-            if (cart.length === 0) {
-                box.innerHTML =
-                    '<p class="co-empty">Your bag is empty. ' +
-                    '<a href="index.html">Browse the collection</a></p>';
-                totalBox.textContent = "PKR 0";
-                document.getElementById("coSubmit").disabled = true;
-                return;
-            }
-
-            box.innerHTML = "";
-
-            cart.forEach(function (item) {
-
-                const price = Number(item.price) || 0;
-                const qty = Number(item.quantity) || 1;
-                total += price * qty;
-
-                const row = document.createElement("div");
-                row.className = "co-item";
-
-                row.innerHTML =
-                    (item.image
-                        ? '<div class="co-thumb"><img src="' +
-                          escapeHTML(item.image) + '" alt="' +
-                          escapeHTML(item.name) + '"></div>'
-                        : '') +
-                    '<div class="co-item-info">' +
-                        '<strong>' + escapeHTML(item.name) + '</strong>' +
-                        '<span>Qty ' + qty + '</span>' +
-                    '</div>' +
-                    '<span class="co-item-price">PKR ' +
-                        (price * qty).toLocaleString() +
-                    '</span>';
-
-                box.appendChild(row);
-            });
-
-            totalBox.textContent = "PKR " + total.toLocaleString();
-            return total;
-        }
-
-
-        const orderTotal = renderSummary();
+    </header>
 
 
 
-        /* Order number: WYRE-YYMMDD-XXXX */
+    <!-- ================= MAIN ================= -->
 
-        function makeOrderId() {
-
-            const now = new Date();
-
-            const stamp =
-                String(now.getFullYear()).slice(2) +
-                String(now.getMonth() + 1).padStart(2, "0") +
-                String(now.getDate()).padStart(2, "0");
-
-            const random =
-                Math.random().toString(36).slice(2, 6).toUpperCase();
-
-            return "WYRE-" + stamp + "-" + random;
-        }
+    <main>
 
 
-        const ORDER_ID = makeOrderId();
+        <!-- ================= HERO ================= -->
+
+        <section class="hero" id="home">
+
+            <!-- Hero Image (parallax wrapper ke andar) -->
+            <div class="hero-media">
+                <img
+                    src="hero-wy.jpg"
+                    alt="WYRE Fashion Collection"
+                    class="hero-image">
+            </div>
+
+            <div class="hero-content reveal">
+
+                <span class="hero-small">
+                    WYRE / NEW COLLECTION
+                </span>
+
+                <h1>
+                    <span class="hero-line">Everyday.</span>
+                    <span class="hero-line"><em>Elevated.</em></span>
+                </h1>
+
+                <p>
+                    Modern essentials designed for everyday confidence.
+                    Clean silhouettes. Comfortable fits. Timeless style.
+                </p>
+
+                <a href="#shop" class="primary-btn">
+                    Shop Collection
+                    <span>→</span>
+                </a>
+
+            </div>
+
+        </section>
 
 
-        function showThanks(details) {
 
-            const overlay = document.getElementById("thanks");
+        <!-- ================= COLLECTIONS ================= -->
 
-            document.getElementById("thanksName").textContent =
-                details.name.split(" ")[0] || "friend";
+        <section class="collections-section" id="collections">
 
-            document.getElementById("thanksId").textContent =
-                details.orderId;
+            <div class="section-heading reveal">
 
-            document.getElementById("thanksItems").textContent =
-                details.count + (details.count === 1 ? " item" : " items");
+                <p>
+                    EXPLORE WYRE
+                </p>
 
-            document.getElementById("thanksTotal").textContent =
-                "PKR " + details.total.toLocaleString();
+                <h2>
+                    Shop by category
+                </h2>
 
-            document.getElementById("thanksCity").textContent =
-                details.city;
-
-            overlay.classList.add("active");
-            overlay.setAttribute("aria-hidden", "false");
-
-            document.body.style.overflow = "hidden";
-
-            document.getElementById("thanksHome").focus();
-        }
+            </div>
 
 
-        const fields = {
-            name:    { el: coName,    ok: v => v.trim().length >= 3 },
-            phone:   { el: coPhone,   ok: v => /^03\d{9}$/.test(v.trim()) },
-            city:    { el: coCity,    ok: v => v.trim().length >= 2 },
-            address: { el: coAddress, ok: v => v.trim().length >= 10 }
-        };
-
-        Object.values(fields).forEach(function (f) {
-            f.el.addEventListener("input", function () {
-                f.el.closest(".co-field").classList.remove("invalid");
-            });
-        });
+            <div class="category-grid">
 
 
-        document.getElementById("coForm")
-            .addEventListener("submit", function (event) {
+                <!-- ================= CAPS ================= -->
 
-            event.preventDefault();
+                <a href="#shop"
+                    class="category-card reveal"
+                    data-category-link="caps">
 
-            let valid = true;
+                    <div class="category-image">
 
-            Object.values(fields).forEach(function (f) {
-                if (!f.ok(f.el.value)) {
-                    f.el.closest(".co-field").classList.add("invalid");
-                    valid = false;
-                }
-            });
+                        <img
+                            src="cap-1.jpg"
+                            alt="WYRE Caps">
 
-            if (!valid) {
-                document.querySelector(".co-field.invalid input, .co-field.invalid textarea")
-                    .focus();
-                return;
-            }
+                    </div>
 
-            const button = document.getElementById("coSubmit");
-            const message = document.getElementById("coMessage");
+                    <div class="category-content">
 
-            button.disabled = true;
-            button.textContent = "Sending order...";
-            message.textContent = "";
-            message.className = "co-message";
+                        <span>
+                            03 PRODUCTS
+                        </span>
 
-            const itemCount = cart.reduce(function (sum, item) {
-                return sum + (Number(item.quantity) || 1);
-            }, 0);
+                        <h3>
+                            Caps
+                        </h3>
 
-            const products = cart.map(function (item) {
-                return item.name + " x" + (item.quantity || 1) +
-                       " — PKR " + (Number(item.price) * (item.quantity || 1));
-            }).join("\n");
+                        <div>
+                            Explore →
+                        </div>
 
-            fetch(FORMSPREE_ENDPOINT, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-                body: JSON.stringify({
-                    customer_name: coName.value.trim(),
-                    phone: coPhone.value.trim(),
-                    city: coCity.value.trim(),
-                    address: coAddress.value.trim(),
-                    notes: coNotes.value.trim(),
-                    products: products,
-                    total: "PKR " + orderTotal.toLocaleString(),
-                    order_id: ORDER_ID,
-                    order_date: new Date().toLocaleString()
-                })
-            })
-            .then(function (response) {
+                    </div>
 
-                if (!response.ok) {
-                    throw new Error("failed");
-                }
+                </a>
 
-                const placed = {
-                    orderId: ORDER_ID,
-                    name: coName.value.trim(),
-                    city: coCity.value.trim(),
-                    count: itemCount,
-                    total: orderTotal
-                };
 
-                message.className = "co-message";
-                message.textContent = "";
 
-                button.textContent = "Order placed ✓";
+                <!-- ================= SHIRTS ================= -->
 
-                localStorage.removeItem("wyreCart");
-                cart = [];
-                renderSummary();
+                <a href="#shop"
+                    class="category-card reveal"
+                    data-category-link="shirts">
 
-                showThanks(placed);
-            })
-            .catch(function () {
+                    <div class="category-image">
 
-                message.className = "co-message error";
-                message.textContent =
-                    "Something went wrong. Please try again, " +
-                    "or WhatsApp us to place the order.";
+                        <img
+                            src="shirt-1.jpg"
+                            alt="WYRE Shirts">
 
-                button.disabled = false;
-                button.textContent = "Place order";
-            });
-        });
-    </script>
+                    </div>
+
+                    <div class="category-content">
+
+                        <span>
+                            03 PRODUCTS
+                        </span>
+
+                        <h3>
+                            Shirts
+                        </h3>
+
+                        <div>
+                            Explore →
+                        </div>
+
+                    </div>
+
+                </a>
+
+
+
+                <!-- ================= PANTS ================= -->
+
+                <a href="#shop"
+                    class="category-card reveal"
+                    data-category-link="pants">
+
+                    <div class="category-image">
+
+                        <img
+                            src="pants-1.jpg"
+                            alt="WYRE Pants">
+
+                    </div>
+
+                    <div class="category-content">
+
+                        <span>
+                            03 PRODUCTS
+                        </span>
+
+                        <h3>
+                            Pants
+                        </h3>
+
+                        <div>
+                            Explore →
+                        </div>
+
+                    </div>
+
+                </a>
+
+
+
+                <!-- ================= TROUSERS ================= -->
+
+                <a href="#shop"
+                    class="category-card reveal"
+                    data-category-link="trousers">
+
+                    <div class="category-image">
+
+                        <img
+                            src="trouser-1.jpg"
+                            alt="WYRE Trousers">
+
+                    </div>
+
+                    <div class="category-content">
+
+                        <span>
+                            03 PRODUCTS
+                        </span>
+
+                        <h3>
+                            Trousers
+                        </h3>
+
+                        <div>
+                            Explore →
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= PRODUCTS ================= -->
+
+        <section class="products-section" id="shop">
+
+            <div class="section-heading reveal">
+
+                <p>
+                    SHOP WYRE
+                </p>
+
+                <h2>
+                    Latest collection
+                </h2>
+
+            </div>
+
+
+            <!-- Filters -->
+
+            <div class="category-filter reveal">
+
+                <button
+                    class="filter-btn active"
+                    data-filter="all">
+
+                    All
+
+                </button>
+
+                <button
+                    class="filter-btn"
+                    data-filter="caps">
+
+                    Caps
+
+                </button>
+
+                <button
+                    class="filter-btn"
+                    data-filter="shirts">
+
+                    Shirts
+
+                </button>
+
+                <button
+                    class="filter-btn"
+                    data-filter="pants">
+
+                    Pants
+
+                </button>
+
+                <button
+                    class="filter-btn"
+                    data-filter="trousers">
+
+                    Trousers
+
+                </button>
+
+            </div>
+
+
+
+            <!-- Product Grid -->
+
+            <div class="product-grid">
+
+
+                <!-- ================= CAPS ================= -->
+
+
+                <!-- Cap 1 -->
+
+                <article
+                    class="product-card reveal"
+                    data-category="caps"
+                    data-images="cap-1.jpg,cap-1-b.jpg,cap-1-c.jpg">
+
+                    <div class="product-image">
+
+                        <img
+                            src="cap-1.jpg"
+                            alt="WYRE Classic Cap">
+
+                        <span class="product-tag">
+                            NEW
+                        </span>
+
+                        <button
+                            class="wishlist-btn"
+                            aria-label="Add WYRE Classic Cap to wishlist">
+
+                            ♡
+
+                        </button>
+
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span>
+                            CAPS
+                        </span>
+
+                        <h3>
+                            WYRE Classic Cap
+                        </h3>
+
+                        <p>
+                            Minimal everyday cap with a clean streetwear finish.
+                        </p>
+
+                        <strong>
+                            PKR 1,999
+                        </strong>
+
+                        <button
+                            class="quick-add"
+                            data-name="WYRE Classic Cap"
+                            data-price="1999"
+                            data-image="cap-1.jpg">
+
+                            Quick Add
+
+                        </button>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- Cap 2 -->
+
+                <article
+                    class="product-card reveal"
+                    data-category="caps"
+                    data-images="cap-2.jpg,cap-2-b.jpg,cap-2-c.jpg">
+
+                    <div class="product-image">
+
+                        <img
+                            src="cap-2.jpg"
+                            alt="WYRE Spider Cap">
+
+                        <span class="product-tag">
+                            BEST SELLER
+                        </span>
+
+                        <button
+                            class="wishlist-btn"
+                            aria-label="Add WYRE Spider Cap to wishlist">
+
+                            ♡
+
+                        </button>
+
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span>
+                            CAPS
+                        </span>
+
+                        <h3>
+                            WYRE Spider Cap
+                        </h3>
+
+                        <p>
+                            Spider-embroidered cap with a bold streetwear edge.
+                            
+                        </p>
+
+                        <strong>
+                            PKR 1,999
+                        </strong>
+
+                        <button
+                            class="quick-add"
+                            data-name="WYRE Spider Cap"
+                            data-price="1999"
+                            data-image="cap-2.jpg">
+
+                            Quick Add
+
+                        </button>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- Cap 3 -->
+
+                <article
+                    class="product-card reveal"
+                    data-category="caps"
+                    data-images="cap-3.jpg,cap-3-b.jpg,cap-3-c.jpg">
+
+                    <div class="product-image">
+
+                        <img
+                            src="cap-3.jpg"
+                            alt="WYRE Urban Cap">
+
+                        <span class="product-tag">
+                            LIMITED
+                        </span>
+
+                        <button
+                            class="wishlist-btn"
+                            aria-label="Add WYRE Urban Cap to wishlist">
+
+                            ♡
+
+                        </button>
+
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span>
+                            CAPS
+                        </span>
+
+                        <h3>
+                            WYRE Urban Cap
+                        </h3>
+
+                        <p>
+                           Signature WYRE design made for effortless daily wear.
+                        </p>
+
+                        <strong>
+                            PKR 1,999
+                        </strong>
+
+                        <button
+                            class="quick-add"
+                            data-name="WYRE Urban Cap"
+                            data-price="1999"
+                            data-image="cap-3.jpg">
+
+                            Quick Add
+
+                        </button>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- ================= SHIRTS ================= -->
+
+
+                <!-- Shirt 1 -->
+
+                <article
+                    class="product-card reveal"
+                    data-category="shirts"
+                    data-colors="Navy|#22384a,Rust|#8b4a34,Cream|#e6e0d2,Green|#3f5c4c">
+
+                    <div class="product-image">
+
+                        <img
+                            src="shirt-1.jpg"
+                            alt="WYRE Essential Shirt">
+
+                        <span class="product-tag">
+                            NEW
+                        </span>
+
+                        <button
+                            class="wishlist-btn"
+                            aria-label="Add WYRE Essential Shirt to wishlist">
+
+                            ♡
+
+                        </button>
+
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span>
+                            SHIRTS
+                        </span>
+
+                        <h3>
+                            WYRE Essential Shirt
+                        </h3>
+
+                        <p>
+                            Relaxed everyday shirt with a clean premium aesthetic.
+                        </p>
+
+                        <strong>
+                            PKR 1,999
+                        </strong>
+
+                        <button
+                            class="quick-add"
+                            data-name="WYRE Essential Shirt"
+                            data-price="1999"
+                            data-image="shirt-1.jpg">
+
+                            Quick Add
+
+                        </button>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- Shirt 2 -->
+
+                <article
+                    class="product-card reveal"
+                    data-category="shirts">
+
+                    <div class="product-image">
+
+                        <img
+                            src="shirt-2.jpg"
+                            alt="WYRE Oversized Shirt">
+
+                        <span class="product-tag">
+                            BEST SELLER
+                        </span>
+
+                        <button
+                            class="wishlist-btn"
+                            aria-label="Add WYRE Oversized Shirt to wishlist">
+
+                            ♡
+
+                        </button>
+
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span>
+                            SHIRTS
+                        </span>
+
+                        <h3>
+                            WYRE Oversized Shirt
+                        </h3>
+
+                        <p>
+                            Loose oversized fit built for modern streetwear styling.
+                        </p>
+
+                        <strong>
+                            PKR 1,499
+                        </strong>
+
+                        <button
+                            class="quick-add"
+                            data-name="WYRE Oversized Shirt"
+                            data-price="1499"
+                            data-image="shirt-2.jpg">
+
+                            Quick Add
+
+                        </button>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- Shirt 3 -->
+
+                <article
+                    class="product-card reveal"
+                    data-category="shirts"
+                    data-colors="Cream|#ece7db,Black|#1b1b1b,Olive|#4a4f3c">
+
+                    <div class="product-image">
+
+                        <img
+                            src="shirt-3.jpg"
+                            alt="WYRE Heavyweight Shirt">
+
+                        <span class="product-tag">
+                            NEW
+                        </span>
+
+                        <button
+                            class="wishlist-btn"
+                            aria-label="Add WYRE Heavyweight Shirt to wishlist">
+
+                            ♡
+
+                        </button>
+
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span>
+                            SHIRTS
+                        </span>
+
+                        <h3>
+                            WYRE Heavyweight Shirt
+                        </h3>
+
+                        <p>
+                            Premium heavyweight construction with a refined fit.
+                        </p>
+
+                        <strong>
+                            PKR 1,499
+                        </strong>
+
+                        <button
+                            class="quick-add"
+                            data-name="WYRE Heavyweight Shirt"
+                            data-price="1499"
+                            data-image="shirt-3.jpg">
+
+                            Quick Add
+
+                        </button>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- ================= PANTS ================= -->
+
+
+                <!-- Pants 1 -->
+
+                <article
+                    class="product-card reveal"
+                    data-category="pants"
+                    data-colors="Stone|#cfc7b8|pants-1.jpg,Black|#1b1b1b|pants-1-black.jpg,Charcoal|#3c3c3a|pants-1-charcoal.jpg">
+
+                    <div class="product-image">
+
+                        <img
+                            src="pants-1.jpg"
+                            alt="WYRE Relaxed Pants">
+
+                        <span class="product-tag">
+                            NEW
+                        </span>
+
+                        <button
+                            class="wishlist-btn"
+                            aria-label="Add WYRE Relaxed Pants to wishlist">
+
+                            ♡
+
+                        </button>
+
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span>
+                            PANTS
+                        </span>
+
+                        <h3>
+                            WYRE Relaxed Pants
+                        </h3>
+
+                        <p>
+                            Relaxed-fit pants combining comfort with a clean silhouette.
+                        </p>
+
+                        <strong>
+                            PKR 1,999
+                        </strong>
+
+                        <button
+                            class="quick-add"
+                            data-name="WYRE Relaxed Pants"
+                            data-price="1999"
+                            data-image="pants-1.jpg">
+
+                            Quick Add
+
+                        </button>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- Pants 2 -->
+
+                <article
+                    class="product-card reveal"
+                    data-category="pants"
+                    data-colors="Khaki|#a89575,Black|#1b1b1b,Olive|#4a4f3c">
+
+                    <div class="product-image">
+
+                        <img
+                            src="pants-2.jpg"
+                            alt="WYRE Cargo Pants">
+
+                        <span class="product-tag">
+                            BEST SELLER
+                        </span>
+
+                        <button
+                            class="wishlist-btn"
+                            aria-label="Add WYRE Cargo Pants to wishlist">
+
+                            ♡
+
+                        </button>
+
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span>
+                            PANTS
+                        </span>
+
+                        <h3>
+                            WYRE Cargo Pants
+                        </h3>
+
+                        <p>
+                            Utility-inspired cargo pants with a contemporary street fit.
+                        </p>
+
+                        <strong>
+                            PKR 1,499
+                        </strong>
+
+                        <button
+                            class="quick-add"
+                            data-name="WYRE Cargo Pants"
+                            data-price="1499"
+                            data-image="pants-2.jpg">
+
+                            Quick Add
+
+                        </button>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- Pants 3 -->
+
+                <article
+                    class="product-card reveal"
+                    data-category="pants"
+                    data-colors="Beige|#d9cfbc,Black|#1b1b1b,Grey|#8a8780">
+
+                    <div class="product-image">
+
+                        <img
+                            src="pants-3.jpg"
+                            alt="WYRE Wide Pants">
+
+                        <span class="product-tag">
+                            LIMITED
+                        </span>
+
+                        <button
+                            class="wishlist-btn"
+                            aria-label="Add WYRE Wide Pants to wishlist">
+
+                            ♡
+
+                        </button>
+
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span>
+                            PANTS
+                        </span>
+
+                        <h3>
+                            WYRE Wide Pants
+                        </h3>
+
+                        <p>
+                            Modern wide-leg pants designed for an effortless look.
+                        </p>
+
+                        <strong>
+                            PKR 1,999
+                        </strong>
+
+                        <button
+                            class="quick-add"
+                            data-name="WYRE Wide Pants"
+                            data-price="1999"
+                            data-image="pants-3.jpg">
+
+                            Quick Add
+
+                        </button>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- ================= TROUSERS ================= -->
+
+
+                <!-- Trouser 1 -->
+
+                <article
+                    class="product-card reveal"
+                    data-category="trousers"
+                    data-colors="Black|#1b1b1b,Charcoal|#3c3c3a,Navy|#22384a">
+
+                    <div class="product-image">
+
+                        <img
+                            src="trouser-1.jpg"
+                            alt="WYRE Classic Trousers">
+
+                        <span class="product-tag">
+                            NEW
+                        </span>
+
+                        <button
+                            class="wishlist-btn"
+                            aria-label="Add WYRE Classic Trousers to wishlist">
+
+                            ♡
+
+                        </button>
+
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span>
+                            TROUSERS
+                        </span>
+
+                        <h3>
+                            WYRE Classic Trousers
+                        </h3>
+
+                        <p>
+                            Sharp classic trousers with a modern everyday fit.
+                        </p>
+
+                        <strong>
+                            PKR 1,799
+                        </strong>
+
+                        <button
+                            class="quick-add"
+                            data-name="WYRE Classic Trousers"
+                            data-price="1799"
+                            data-image="trouser-1.jpg">
+
+                            Quick Add
+
+                        </button>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- Trouser 2 -->
+
+                <article
+                    class="product-card reveal"
+                    data-category="trousers"
+                    data-colors="Sand|#c9b99c,Black|#1b1b1b,Grey|#8a8780">
+
+                    <div class="product-image">
+
+                        <img
+                            src="trouser-2.jpg"
+                            alt="WYRE Tailored Trousers">
+
+                        <span class="product-tag">
+                            BEST SELLER
+                        </span>
+
+                        <button
+                            class="wishlist-btn"
+                            aria-label="Add WYRE Tailored Trousers to wishlist">
+
+                            ♡
+
+                        </button>
+
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span>
+                            TROUSERS
+                        </span>
+
+                        <h3>
+                            WYRE Tailored Trousers
+                        </h3>
+
+                        <p>
+                           Tailored trousers with a clean, relaxed fit.
+                        </p>
+
+                        <strong>
+                            PKR 1,999
+                        </strong>
+
+                        <button
+                            class="quick-add"
+                            data-name="WYRE Tailored Trousers"
+                            data-price="1999"
+                            data-image="trouser-2.jpg">
+
+                            Quick Add
+
+                        </button>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- Trouser 3 -->
+
+                <article
+                    class="product-card reveal"
+                    data-category="trousers"
+                    data-colors="Brown|#6b4f3a,Black|#1b1b1b,Cream|#e6e0d2">
+
+                    <div class="product-image">
+
+                        <img
+                            src="trouser-3.jpg"
+                            alt="WYRE Relaxed Trousers">
+
+                        <span class="product-tag">
+                            NEW
+                        </span>
+
+                        <button
+                            class="wishlist-btn"
+                            aria-label="Add WYRE Relaxed Trousers to wishlist">
+
+                            ♡
+
+                        </button>
+
+
+                    </div>
+
+
+                    <div class="product-info">
+
+                        <span>
+                            TROUSERS
+                        </span>
+
+                        <h3>
+                            WYRE Relaxed Trousers
+                        </h3>
+
+                        <p>
+                            Relaxed trousers offering comfort with a polished finish.
+                        </p>
+
+                        <strong>
+                            PKR 1,499
+                        </strong>
+
+                        <button
+                            class="quick-add"
+                            data-name="WYRE Relaxed Trousers"
+                            data-price="1499"
+                            data-image="trouser-3.jpg">
+
+                            Quick Add
+
+                        </button>
+
+                    </div>
+
+                </article>
+
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= BRAND STORY ================= -->
+
+        <section class="brand-story" id="about">
+
+            <div class="brand-story-inner reveal">
+
+                <span>
+                    THE WYRE PHILOSOPHY
+                </span>
+
+                <h2>
+                    Less noise.
+                    <br>
+                    <em>More style.</em>
+                </h2>
+
+                <p>
+                    WYRE is built around a simple idea:
+                    everyday clothing should feel effortless.
+                    We focus on clean designs, comfortable fits
+                    and pieces that work beyond the season.
+                </p>
+
+            </div>
+
+
+            <!-- Brand card -->
+
+            <aside class="brand-card reveal">
+
+                <div class="brand-card-top">
+
+                    <img src="wyre-logo-light.png" alt="WYRE"
+                        width="946" height="197" class="brand-card-logo">
+
+                    <span class="brand-card-tag">
+                        EVERYDAY. ELEVATED.
+                    </span>
+
+                </div>
+
+
+                <ul class="brand-pillars">
+
+                    <li>
+                        <strong>Considered design</strong>
+                        <span>
+                            Clean silhouettes and quiet detailing.
+                            Nothing loud, nothing you grow out of.
+                        </span>
+                    </li>
+
+                    <li>
+                        <strong>Everyday comfort</strong>
+                        <span>
+                            Relaxed fits and soft fabrics, cut for
+                            the days you actually live in.
+                        </span>
+                    </li>
+
+                    <li>
+                        <strong>Beyond the season</strong>
+                        <span>
+                            A small collection, refreshed carefully
+                            instead of chasing every trend.
+                        </span>
+                    </li>
+
+                </ul>
+
+
+                <a href="#shop" class="brand-card-link">
+                    Explore the collection
+                    <span>&rarr;</span>
+                </a>
+
+            </aside>
+
+        </section>
+
+
+
+    </main>
+
+
+
+    <!-- ================= CART DRAWER ================= -->
+
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+
+    <aside class="cart-drawer" id="cartDrawer">
+
+        <div class="cart-header">
+
+            <div>
+
+                <span>
+                    YOUR BAG
+                </span>
+
+                <h3>
+                    Shopping Cart
+                </h3>
+
+            </div>
+
+            <button
+                id="cartClose"
+                class="cart-close"
+                aria-label="Close cart">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <div
+            class="cart-items"
+            id="cartItems">
+
+            <!-- Cart items inserted by JavaScript -->
+
+        </div>
+
+
+        <div class="cart-footer">
+
+            <div class="cart-total">
+
+                <span>
+                    Subtotal
+                </span>
+
+                <strong id="cartTotal">
+                    PKR 0
+                </strong>
+
+            </div>
+
+            <button
+                class="checkout-btn"
+                id="checkoutBtn">
+
+                Checkout
+
+                <span>
+                    →
+                </span>
+
+            </button>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer class="footer">
+
+        <div class="footer-main">
+
+
+            <div class="footer-brand">
+
+                <a href="#home" class="footer-logo" aria-label="WYRE — home">
+                    <img src="wyre-logo-light.png" alt="WYRE"
+                        width="946" height="197">
+                </a>
+
+                <p>
+                    Everyday essentials.
+                    Elevated.
+                </p>
+
+            </div>
+
+
+            <div class="footer-links">
+
+                <div>
+
+                    <span>
+                        SHOP
+                    </span>
+
+                    <a href="#shop">
+                        All Products
+                    </a>
+
+                    <a href="#shop">
+                        Caps
+                    </a>
+
+                    <a href="#shop">
+                        Shirts
+                    </a>
+
+                    <a href="#shop">
+                        Pants
+                    </a>
+
+                    <a href="#shop">
+                        Trousers
+                    </a>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        COMPANY
+                    </span>
+
+                    <a href="#about">
+                        About WYRE
+                    </a>
+
+                    <a href="#">
+                        Contact
+                    </a>
+
+                    <a href="#">
+                        Shipping
+                    </a>
+
+                    <a href="#">
+                        Returns
+                    </a>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        FOLLOW
+                    </span>
+
+                    <a href="#">
+                        Instagram
+                    </a>
+
+                    <a href="#">
+                        Facebook
+                    </a>
+
+                    <a href="#">
+                        TikTok
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <p>
+                © 2026 WYRE. All rights reserved.
+            </p>
+
+            <p>
+                Designed & developed with care.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+
+    <!-- ================= JAVASCRIPT ================= -->
+
+    <script src="script.js"></script>
 
 </body>
 

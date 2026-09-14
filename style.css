@@ -912,7 +912,7 @@ a {
     margin: 35px 0;
     font-size: 15px;
     line-height: 1.8;
-    color: #555;
+    color: #070707;
 }
 
 .primary-btn {
@@ -1159,7 +1159,9 @@ a {
 .brand-story {
     min-height: 650px;
     padding: 100px 7%;
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: 70px;
     align-items: center;
     background: #e8e5dd;
 }
@@ -3792,5 +3794,281 @@ section[id] {
     .thanks.active .thanks-bag .bag-item {
         opacity: 1;
         transform: translateY(29px);
+    }
+}
+
+
+/* =========================
+   MY ORDERS DRAWER
+   Cart drawer ka hi shell use karta hai (.cart-drawer),
+   sirf andar ke order cards naye hain.
+========================= */
+
+.orders-drawer .cart-items {
+    gap: 18px;
+}
+
+.order-card {
+    border: 1px solid #e3e0d8;
+    border-radius: 14px;
+    background: #fff;
+    padding: 16px 16px 14px;
+}
+
+.order-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #EDEBE5;
+}
+
+.order-id {
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.order-date {
+    display: block;
+    margin-top: 3px;
+    font-size: 11px;
+    color: #8a8780;
+}
+
+.order-status {
+    flex-shrink: 0;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: #EDEBE5;
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #2e2c28;
+    white-space: nowrap;
+}
+
+.order-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px 0;
+}
+
+.order-line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.order-thumb {
+    width: 46px;
+    height: 58px;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 6px;
+    background: #EDEBE5;
+}
+
+.order-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.order-line-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.order-line-info strong {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.order-line-info span {
+    display: block;
+    margin-top: 2px;
+    font-size: 11px;
+    color: #8a8780;
+}
+
+.order-line-price {
+    flex-shrink: 0;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.order-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #EDEBE5;
+}
+
+.order-foot span {
+    font-size: 11px;
+    color: #777;
+}
+
+.order-foot strong {
+    font-size: 13.5px;
+    font-weight: 600;
+}
+
+.orders-note {
+    margin: 0;
+    font-size: 11px;
+    line-height: 1.6;
+    color: #8a8780;
+    text-align: center;
+}
+
+.orders-drawer .cart-footer {
+    display: block;
+}
+
+
+/* =========================
+   BRAND CARD (about section)
+   Cream background par black card — logo apne asli
+   white-on-black look mein wapis aa jata hai.
+========================= */
+
+.brand-card {
+    width: 100%;
+    max-width: 470px;
+    justify-self: end;
+    padding: 46px 40px 40px;
+    border-radius: 22px;
+    background: #111;
+    color: #fff;
+}
+
+.brand-card-top {
+    padding-bottom: 32px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+    text-align: center;
+}
+
+.brand-card-logo {
+    display: block;
+    height: 30px;
+    width: auto;
+    margin: 0 auto 16px;
+}
+
+.brand-card-tag {
+    display: block;
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.brand-pillars {
+    list-style: none;
+    margin: 32px 0 34px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.brand-pillars li {
+    position: relative;
+    padding-left: 18px;
+}
+
+.brand-pillars li::before {
+    content: "";
+    position: absolute;
+    top: 7px;
+    left: 0;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.45);
+}
+
+.brand-pillars strong {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+}
+
+.brand-pillars span {
+    display: block;
+    font-size: 12.5px;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.brand-card-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+}
+
+.brand-card-link span {
+    transition: transform 0.3s ease;
+}
+
+.brand-card-link:hover span {
+    transform: translateX(5px);
+}
+
+
+@media (max-width: 1000px) {
+
+    .brand-story {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 50px;
+    }
+
+    .brand-card {
+        justify-self: start;
+        max-width: 520px;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .brand-card {
+        padding: 38px 26px 32px;
+    }
+
+    .brand-card-logo {
+        height: 26px;
+    }
+
+    .brand-pillars {
+        margin: 28px 0 30px;
+        gap: 20px;
+    }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+
+    .brand-card-link span {
+        transition: none;
     }
 }
