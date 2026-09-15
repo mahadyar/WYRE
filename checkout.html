@@ -157,7 +157,7 @@
                 </g>
 
 
-                <!-- bag ka front -->
+                <!-- bag ka front: solid fill, taake item peechay chhup jaye -->
 
                 <path class="bag-body"
                     d="M13.5 29.5H50.5L48 55.5A4.2 4.2 0 0 1 43.8 59.3H20.2A4.2 4.2 0 0 1 16 55.5Z"
@@ -218,14 +218,7 @@
 
 
     <script>
-
-        /* ================= GOOGLE SHEETS ================= */
-
-        const GOOGLE_SHEETS_ENDPOINT =
-            "https://script.google.com/macros/s/AKfycbyhaH1QQPse1vfI4S7nklhPgSJ4OVu8eIpZNC990RVzgv0Ui8C2s08LJ8Lgcv0vMZN9/exec";
-
-
-        /* ================= CART ================= */
+        const FORMSPREE_ENDPOINT = "https://formspree.io/f/xvkoqrna";
 
         let cart = [];
 
@@ -243,8 +236,6 @@
         }
 
 
-        /* ================= RENDER SUMMARY ================= */
-
         function renderSummary() {
 
             const box = document.getElementById("coItems");
@@ -252,16 +243,12 @@
             let total = 0;
 
             if (cart.length === 0) {
-
                 box.innerHTML =
                     '<p class="co-empty">Your bag is empty. ' +
                     '<a href="index.html">Browse the collection</a></p>';
-
                 totalBox.textContent = "PKR 0";
-
                 document.getElementById("coSubmit").disabled = true;
-
-                return 0;
+                return;
             }
 
             box.innerHTML = "";
@@ -270,11 +257,9 @@
 
                 const price = Number(item.price) || 0;
                 const qty = Number(item.quantity) || 1;
-
                 total += price * qty;
 
                 const row = document.createElement("div");
-
                 row.className = "co-item";
 
                 row.innerHTML =
@@ -283,18 +268,10 @@
                           escapeHTML(item.image) + '" alt="' +
                           escapeHTML(item.name) + '"></div>'
                         : '') +
-
                     '<div class="co-item-info">' +
-                        '<strong>' +
-                            escapeHTML(item.name) +
-                        '</strong>' +
-
-                        '<span>Qty ' +
-                            qty +
-                        '</span>' +
-
+                        '<strong>' + escapeHTML(item.name) + '</strong>' +
+                        '<span>Qty ' + qty + '</span>' +
                     '</div>' +
-
                     '<span class="co-item-price">PKR ' +
                         (price * qty).toLocaleString() +
                     '</span>';
@@ -302,9 +279,7 @@
                 box.appendChild(row);
             });
 
-            totalBox.textContent =
-                "PKR " + total.toLocaleString();
-
+            totalBox.textContent = "PKR " + total.toLocaleString();
             return total;
         }
 
@@ -313,7 +288,7 @@
 
 
 
-        /* ================= ORDER NUMBER ================= */
+        /* Order number: WYRE-YYMMDD-XXXX */
 
         function makeOrderId() {
 
@@ -325,448 +300,188 @@
                 String(now.getDate()).padStart(2, "0");
 
             const random =
-                Math.random()
-                    .toString(36)
-                    .slice(2, 6)
-                    .toUpperCase();
+                Math.random().toString(36).slice(2, 6).toUpperCase();
 
-            return "WYRE-" +
-                stamp +
-                "-" +
-                random;
+            return "WYRE-" + stamp + "-" + random;
         }
 
 
         const ORDER_ID = makeOrderId();
 
 
-
-        /* ================= LOCAL ORDER HISTORY ================= */
+        /* Order ki copy device par rakh lo, taake buyer navbar ke
+           "My Orders" mein dekh sake ke usne kya liya tha. */
 
         function saveOrderToHistory(details) {
 
             try {
 
                 let history =
-                    JSON.parse(
-                        localStorage.getItem("wyreOrders")
-                    );
+                    JSON.parse(localStorage.getItem("wyreOrders"));
 
                 if (!Array.isArray(history)) {
                     history = [];
                 }
 
                 history.unshift({
-
-                    orderId:
-                        details.orderId,
-
-                    placedAt:
-                        new Date().toISOString(),
-
-                    city:
-                        details.city,
-
-                    total:
-                        details.total,
-
-                    items:
-                        cart.map(function (item) {
-
-                            return {
-
-                                name:
-                                    item.name,
-
-                                price:
-                                    Number(item.price) || 0,
-
-                                quantity:
-                                    Number(item.quantity) || 1,
-
-                                image:
-                                    item.image || ""
-                            };
-
-                        })
-
+                    orderId: details.orderId,
+                    placedAt: new Date().toISOString(),
+                    city: details.city,
+                    total: details.total,
+                    items: cart.map(function (item) {
+                        return {
+                            name: item.name,
+                            price: Number(item.price) || 0,
+                            quantity: Number(item.quantity) || 1,
+                            image: item.image || ""
+                        };
+                    })
                 });
 
                 localStorage.setItem(
                     "wyreOrders",
-                    JSON.stringify(
-                        history.slice(0, 20)
-                    )
+                    JSON.stringify(history.slice(0, 20))
                 );
 
             } catch (e) { }
         }
 
 
-
-        /* ================= THANK YOU ================= */
-
         function showThanks(details) {
 
-            const overlay =
-                document.getElementById("thanks");
+            const overlay = document.getElementById("thanks");
 
-            document.getElementById("thanksName")
-                .textContent =
-                details.name.split(" ")[0] ||
-                "friend";
+            document.getElementById("thanksName").textContent =
+                details.name.split(" ")[0] || "friend";
 
-            document.getElementById("thanksId")
-                .textContent =
+            document.getElementById("thanksId").textContent =
                 details.orderId;
 
-            document.getElementById("thanksItems")
-                .textContent =
-                details.count +
-                (details.count === 1
-                    ? " item"
-                    : " items");
+            document.getElementById("thanksItems").textContent =
+                details.count + (details.count === 1 ? " item" : " items");
 
-            document.getElementById("thanksTotal")
-                .textContent =
-                "PKR " +
-                details.total.toLocaleString();
+            document.getElementById("thanksTotal").textContent =
+                "PKR " + details.total.toLocaleString();
 
-            document.getElementById("thanksCity")
-                .textContent =
+            document.getElementById("thanksCity").textContent =
                 details.city;
 
             overlay.classList.add("active");
+            overlay.setAttribute("aria-hidden", "false");
 
-            overlay.setAttribute(
-                "aria-hidden",
-                "false"
-            );
+            document.body.style.overflow = "hidden";
 
-            document.body.style.overflow =
-                "hidden";
-
-            document.getElementById("thanksHome")
-                .focus();
+            document.getElementById("thanksHome").focus();
         }
 
 
-
-        /* ================= VALIDATION ================= */
-
         const fields = {
-
-            name: {
-                el: coName,
-                ok: v =>
-                    v.trim().length >= 3
-            },
-
-            phone: {
-                el: coPhone,
-                ok: v =>
-                    /^03\d{9}$/.test(v.trim())
-            },
-
-            city: {
-                el: coCity,
-                ok: v =>
-                    v.trim().length >= 2
-            },
-
-            address: {
-                el: coAddress,
-                ok: v =>
-                    v.trim().length >= 10
-            }
+            name:    { el: coName,    ok: v => v.trim().length >= 3 },
+            phone:   { el: coPhone,   ok: v => /^03\d{9}$/.test(v.trim()) },
+            city:    { el: coCity,    ok: v => v.trim().length >= 2 },
+            address: { el: coAddress, ok: v => v.trim().length >= 10 }
         };
 
-
         Object.values(fields).forEach(function (f) {
-
-            f.el.addEventListener(
-                "input",
-                function () {
-
-                    f.el
-                        .closest(".co-field")
-                        .classList
-                        .remove("invalid");
-
-                }
-            );
-
+            f.el.addEventListener("input", function () {
+                f.el.closest(".co-field").classList.remove("invalid");
+            });
         });
 
 
+        document.getElementById("coForm")
+            .addEventListener("submit", function (event) {
 
-        /* ================= SUBMIT ORDER ================= */
+            event.preventDefault();
 
-        document
-            .getElementById("coForm")
-            .addEventListener(
-                "submit",
-                async function (event) {
+            let valid = true;
 
-                    event.preventDefault();
-
-
-                    /* Validate */
-
-                    let valid = true;
-
-                    Object.values(fields)
-                        .forEach(function (f) {
-
-                            if (!f.ok(f.el.value)) {
-
-                                f.el
-                                    .closest(".co-field")
-                                    .classList
-                                    .add("invalid");
-
-                                valid = false;
-                            }
-
-                        });
-
-
-                    if (!valid) {
-
-                        document
-                            .querySelector(
-                                ".co-field.invalid input, " +
-                                ".co-field.invalid textarea"
-                            )
-                            .focus();
-
-                        return;
-                    }
-
-
-                    /* Empty cart check */
-
-                    if (!cart.length) {
-                        return;
-                    }
-
-
-                    const button =
-                        document.getElementById(
-                            "coSubmit"
-                        );
-
-                    const message =
-                        document.getElementById(
-                            "coMessage"
-                        );
-
-
-                    button.disabled = true;
-
-                    button.textContent =
-                        "Sending order...";
-
-                    message.textContent = "";
-
-                    message.className =
-                        "co-message";
-
-
-                    /* Count items */
-
-                    const itemCount =
-                        cart.reduce(
-                            function (sum, item) {
-
-                                return sum +
-                                    (Number(
-                                        item.quantity
-                                    ) || 1);
-
-                            },
-                            0
-                        );
-
-
-                    /* Product text */
-
-                    const products =
-                        cart.map(
-                            function (item) {
-
-                                return item.name +
-                                    " x" +
-                                    (item.quantity || 1) +
-                                    " — PKR " +
-                                    (
-                                        Number(item.price) *
-                                        (item.quantity || 1)
-                                    );
-
-                            }
-                        ).join("\n");
-
-
-                    /* Customer details */
-
-                    const customerDetails = {
-
-                        name:
-                            coName.value.trim(),
-
-                        phone:
-                            coPhone.value.trim(),
-
-                        city:
-                            coCity.value.trim(),
-
-                        address:
-                            coAddress.value.trim(),
-
-                        notes:
-                            coNotes.value.trim()
-                    };
-
-
-                    try {
-
-                        /* =========================
-                           SAVE ORDER TO GOOGLE SHEETS
-                           ========================= */
-
-                        await fetch(
-                            GOOGLE_SHEETS_ENDPOINT,
-                            {
-                                method: "POST",
-
-                                mode: "no-cors",
-
-                                headers: {
-                                    "Content-Type":
-                                        "text/plain;charset=utf-8"
-                                },
-
-                                body:
-                                    JSON.stringify({
-
-                                        order_id:
-                                            ORDER_ID,
-
-                                        customer_name:
-                                            customerDetails.name,
-
-                                        phone:
-                                            customerDetails.phone,
-
-                                        city:
-                                            customerDetails.city,
-
-                                        address:
-                                            customerDetails.address,
-
-                                        notes:
-                                            customerDetails.notes,
-
-                                        products:
-                                            products,
-
-                                        total:
-                                            "PKR " +
-                                            orderTotal.toLocaleString(),
-
-                                        order_date:
-                                            new Date()
-                                                .toLocaleString()
-                                    })
-                            }
-                        );
-
-
-                        /* =========================
-                           LOCAL ORDER HISTORY
-                           ========================= */
-
-                        const placed = {
-
-                            orderId:
-                                ORDER_ID,
-
-                            name:
-                                customerDetails.name,
-
-                            city:
-                                customerDetails.city,
-
-                            count:
-                                itemCount,
-
-                            total:
-                                orderTotal
-                        };
-
-
-                        saveOrderToHistory(
-                            placed
-                        );
-
-
-                        /* =========================
-                           CLEAR CART
-                           ========================= */
-
-                        localStorage.removeItem(
-                            "wyreCart"
-                        );
-
-                        cart = [];
-
-                        renderSummary();
-
-
-                        /* =========================
-                           THANK YOU
-                           ========================= */
-
-                        button.textContent =
-                            "Order placed ✓";
-
-                        message.className =
-                            "co-message";
-
-                        message.textContent =
-                            "";
-
-                        showThanks(
-                            placed
-                        );
-
-
-                    } catch (error) {
-
-                        console.error(
-                            "Order submission error:",
-                            error
-                        );
-
-
-                        message.className =
-                            "co-message error";
-
-                        message.textContent =
-                            "Something went wrong. Please try again, " +
-                            "or WhatsApp us to place the order.";
-
-
-                        button.disabled = false;
-
-                        button.textContent =
-                            "Place order";
-                    }
-
+            Object.values(fields).forEach(function (f) {
+                if (!f.ok(f.el.value)) {
+                    f.el.closest(".co-field").classList.add("invalid");
+                    valid = false;
                 }
-            );
+            });
 
+            if (!valid) {
+                document.querySelector(".co-field.invalid input, .co-field.invalid textarea")
+                    .focus();
+                return;
+            }
+
+            const button = document.getElementById("coSubmit");
+            const message = document.getElementById("coMessage");
+
+            button.disabled = true;
+            button.textContent = "Sending order...";
+            message.textContent = "";
+            message.className = "co-message";
+
+            const itemCount = cart.reduce(function (sum, item) {
+                return sum + (Number(item.quantity) || 1);
+            }, 0);
+
+            const products = cart.map(function (item) {
+                return item.name + " x" + (item.quantity || 1) +
+                       " — PKR " + (Number(item.price) * (item.quantity || 1));
+            }).join("\n");
+
+            fetch(FORMSPREE_ENDPOINT, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({
+                    customer_name: coName.value.trim(),
+                    phone: coPhone.value.trim(),
+                    city: coCity.value.trim(),
+                    address: coAddress.value.trim(),
+                    notes: coNotes.value.trim(),
+                    products: products,
+                    total: "PKR " + orderTotal.toLocaleString(),
+                    order_id: ORDER_ID,
+                    order_date: new Date().toLocaleString()
+                })
+            })
+            .then(function (response) {
+
+                if (!response.ok) {
+                    throw new Error("failed");
+                }
+
+                const placed = {
+                    orderId: ORDER_ID,
+                    name: coName.value.trim(),
+                    city: coCity.value.trim(),
+                    count: itemCount,
+                    total: orderTotal
+                };
+
+                message.className = "co-message";
+                message.textContent = "";
+
+                button.textContent = "Order placed ✓";
+
+                saveOrderToHistory(placed);
+
+                localStorage.removeItem("wyreCart");
+                cart = [];
+                renderSummary();
+
+                showThanks(placed);
+            })
+            .catch(function () {
+
+                message.className = "co-message error";
+                message.textContent =
+                    "Something went wrong. Please try again, " +
+                    "or WhatsApp us to place the order.";
+
+                button.disabled = false;
+                button.textContent = "Place order";
+            });
+        });
     </script>
 
 </body>
