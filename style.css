@@ -4072,3 +4072,135 @@ section[id] {
         transition: none;
     }
 }
+/* ================= WYRE MARQUEE ================= */
+
+.wyre-marquee {
+    width: 100%;
+    overflow: hidden;
+
+    background: #fff;
+    color: #111;
+
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+
+    padding: 17px 0;
+
+    white-space: nowrap;
+}
+
+.wyre-marquee-track {
+    width: max-content;
+
+    display: flex;
+    align-items: center;
+
+    gap: 38px;
+
+    animation: wyreMarquee 24s linear infinite;
+}
+
+.wyre-marquee span {
+    font-size: 11px;
+    font-weight: 500;
+
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+}
+
+.wyre-marquee i {
+    font-size: 13px;
+    font-style: normal;
+}
+
+
+/* MARQUEE ANIMATION */
+
+@keyframes wyreMarquee {
+
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .wyre-marquee {
+        padding: 14px 0;
+    }
+
+    .wyre-marquee-track {
+        gap: 25px;
+        animation-duration: 18s;
+    }
+
+    .wyre-marquee span {
+        font-size: 9px;
+        letter-spacing: 0.16em;
+    }
+
+    .wyre-marquee i {
+        font-size: 10px;
+    }
+
+}
+/* Keep marquee below fixed navbar */
+
+.wyre-marquee {
+    position: relative;
+    z-index: 10;
+    margin-top: 82px;
+}
+@media (max-width: 600px) {
+    .wyre-marquee {
+        margin-top: 70px;
+    }
+}
+/* WYRE MARQUEE - directly below hero */
+
+.wyre-marquee {
+    width: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 14px 0;
+    background: #111;
+    color: #fff;
+}
+
+.wyre-marquee-track {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    width: max-content;
+    animation: wyreMarquee 20s linear infinite;
+    white-space: nowrap;
+}
+
+.wyre-marquee-track span {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+}
+
+.wyre-marquee-track i {
+    font-size: 12px;
+    font-style: normal;
+}
+
+@keyframes wyreMarquee {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
